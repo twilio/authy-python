@@ -1,0 +1,6 @@
+build
+dist
+docs/tmp
+docs/build
+*.tmproj
+*.py[co]

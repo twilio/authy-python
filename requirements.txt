@@ -1,0 +1,7 @@
+httplib2
+simplejson
+pyjwt
+unittest2
+mock
+nose
+sphinx
