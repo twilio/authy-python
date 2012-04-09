@@ -67,11 +67,12 @@ class User(Instance):
     pass
 
 class Users(Resource):
-    def create(self, email, phone):
+    def create(self, email, phone, country_code = 1):
         data = {
             "user": {
                 "email": email,
-                "phone": phone
+                "phone": phone,
+                "country_code": country_code
             }
         }
 
