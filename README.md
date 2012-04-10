@@ -5,9 +5,15 @@ A python library for using the Authy public API.
 
 ## Installation
 
+If you have pip installed it's very easy to install authy, just type
+
+    $ pip install authy
+
 Download the [source code](https://github.com/authy/authy-python/zipball/master) then open a terminal and type:
 
     $ python setup.py install
+
+_Note that you may need admin permissions to run the above commands._
 
 ## Usage
 
@@ -45,7 +51,7 @@ it returns a dictionary explaining what went wrong with the request.
 
 To verify users you need the user id and a token. The token you get from the user through your login form. 
 
-    verification = api.tokens.verify('authy-id', 'token-entered-by-the-user')
+    verification = authy_api.tokens.verify('authy-id', 'token-entered-by-the-user')
 
 Once again you can use `ok()` to verify whether the token was valid or not.
 
