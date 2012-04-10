@@ -19,12 +19,16 @@ class UsersTest(unittest.TestCase):
         self.assertIsInstance(user, User)
         self.assertTrue(user.ok())
         self.assertTrue('user' in user.content)
-    
+        self.assertIsNotNone(user.id)
+        self.assertEqual(user.errors(), {})
+
     def test_create_invalid_user(self):
         user = self.resource.create('testexample.com', '782392032', 1)
         
         self.assertFalse(user.ok())
         self.assertIsInstance(user, User)
         self.assertTrue('email' in user.content)
-        self.assertEqual(user.content['email'], ['is invalid'])
+        self.assertEqual(user.errors()['email'], ['is invalid'])
+        self.assertIsNone(user.id)
+
 

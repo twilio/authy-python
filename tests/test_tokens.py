@@ -18,5 +18,5 @@ class TokensTest(unittest.TestCase):
         token = self.resource.verify('1', 'token')
         self.assertIsInstance(token, Token)
         self.assertFalse(token.ok())
-        self.assertEqual(token.content, 'invalid key')
+        self.assertEqual(token.errors()['error'], 'invalid key')
 
