@@ -62,9 +62,26 @@ class Instance(object):
     def ok(self):
         return self.response['status'] == '200'
 
+    def errors(self):
+        if self.ok():
+            return {}
+
+        errors = self.content
+
+        if(not isinstance(errors, dict)):
+            errors = {"error": errors} # convert to dict for consistency
+
+        return errors
 
 class User(Instance):
-    pass
+    def __init__(self, resource, response, content):
+        super(User, self).__init__(resource, response, content)
+        if(isinstance(self.content, dict) and 'user' in self.content):
+            self.id = self.content['user']['id']
+        else:
+            self.id = None
+
+
 
 class Users(Resource):
     def create(self, email, phone, country_code = 1):
