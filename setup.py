@@ -13,7 +13,7 @@ setup(
     author_email = "help@authy.com",
     url = "http://github.com/authy/python-authy",
     keywords = ["authy"],
-    install_requires = ["httplib2 >= 0.7, < 0.8", "json"],
+    install_requires = ["httplib2 >= 0.7, < 0.8", "simplejson"],
     packages = find_packages(),
     classifiers = [
         "Development Status :: 4 - Beta",
