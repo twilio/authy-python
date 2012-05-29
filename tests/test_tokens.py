@@ -7,16 +7,20 @@ else:
 from authy import AuthyException
 from authy.api.resources import Token
 from authy.api.resources import Tokens
+from authy.api.resources import User
+from authy.api.resources import Users
 
 
 class TokensTest(unittest.TestCase):
 
     def setUp(self):
+        self.users = Users("http://localhost:4567", 'testing_python_api_key')
         self.resource = Tokens("http://localhost:4567", 'testing_python_api_key')
 
     def test_verify_token(self):
-        token = self.resource.verify('1', 'token')
+        user = self.users.create('test@example.com', '345-782-4988', 1)
+        token = self.resource.verify(user.id, 'token')
         self.assertIsInstance(token, Token)
         self.assertFalse(token.ok())
-        self.assertEqual(token.errors()['error'], 'invalid key')
+        self.assertEqual(token.errors()['error'], 'invalid token')
 

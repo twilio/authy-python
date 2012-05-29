@@ -4,7 +4,7 @@ import logging
 import authy
 from authy import AuthyException
 from authy import AuthyApiException
-from urllib import urlencode
+from urllib import urlencode, quote
 from urlparse import urlparse
 
 # import json
@@ -30,13 +30,13 @@ class Resource(object):
 
     def post(self, path, data = {}):
         return self.request("POST", path, data, {'Content-Type': 'application/json'})
-    
+
     def get(self, path):
         return self.request("GET", path)
-        
+
     def put(self, path, data = {}):
         return self.request("PUT", path, data, {'Content-Type': 'application/json'})
-        
+
     def delete(self, path):
         return self.request("DELETE", path, data)
 
@@ -45,7 +45,7 @@ class Resource(object):
         http.follow_redirects = True
 
         body = json.dumps(data)
-        
+
         url = self.api_uri + path + "?api_key="+self.api_key
         return http.request(url, method, headers=headers, body=body)
 
@@ -82,13 +82,12 @@ class User(Instance):
             self.id = None
 
 
-
 class Users(Resource):
     def create(self, email, phone, country_code = 1):
         data = {
             "user": {
                 "email": email,
-                "phone": phone,
+                "cellphone": phone,
                 "country_code": country_code
             }
         }
@@ -99,8 +98,8 @@ class Users(Resource):
 
 class Token(Instance):
     pass
-    
+
 class Tokens(Resource):
     def verify(self, device_id, token):
-        resp, content = self.get("/protected/json/verify/"+token+"/"+str(device_id)+"?api_key="+self.api_key)
+        resp, content = self.get("/protected/json/verify/"+quote(str(token))+"/"+quote(str(device_id)))
         return Token(self, resp, content)
