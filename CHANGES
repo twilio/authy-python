@@ -8,3 +8,8 @@ Version 0.0.1
 
 - Initial version
 
+VERSION 0.0.2
+-------------
+
+- Bugfixes
+- Support for requesting sms tokens

@@ -58,6 +58,16 @@ Once again you can use `ok()` to verify whether the token was valid or not.
     if(verification.ok()):
         # the user is valid
 
+
+### Requesting SMS Tokens
+
+To request a SMS token you only need the user id.
+
+	sms = authy_api.users.request_sms('authy-id')
+
+As always, you can use `ok()` to verify if the token was sent. To be able to use this method you need to have activated the SMS plugin for your Authy App.
+
+
 ### More…
 
 You can fine the full API documentation in the [official documentation](https://docs.authy.com) page.
