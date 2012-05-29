@@ -24,11 +24,19 @@ class UsersTest(unittest.TestCase):
 
     def test_create_invalid_user(self):
         user = self.resource.create('testexample.com', '782392032', 1)
-        
+
         self.assertFalse(user.ok())
         self.assertIsInstance(user, User)
         self.assertTrue('email' in user.content)
         self.assertEqual(user.errors()['email'], ['is invalid'])
         self.assertIsNone(user.id)
+
+
+    def test_request_sms_token(self):
+        user = self.resource.create('testexample.com', '3457824988', 1)
+
+        sms = self.resource.request_sms(user.id)
+        self.assertTrue(sms.ok())
+        self.assertEqual(user.errors(), {})
 
 

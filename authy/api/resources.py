@@ -96,6 +96,11 @@ class Users(Resource):
 
         return User(self, resp, content)
 
+    def request_sms(self, user_id):
+        resp, content = self.get("/protected/json/sms/"+quote(str(user_id)))
+
+        return Instance(self, resp, content)
+
 class Token(Instance):
     pass
 
