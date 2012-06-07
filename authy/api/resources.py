@@ -31,22 +31,28 @@ class Resource(object):
     def post(self, path, data = {}):
         return self.request("POST", path, data, {'Content-Type': 'application/json'})
 
-    def get(self, path):
-        return self.request("GET", path)
+    def get(self, path, data = {}):
+        return self.request("GET", path, data)
 
     def put(self, path, data = {}):
         return self.request("PUT", path, data, {'Content-Type': 'application/json'})
 
-    def delete(self, path):
+    def delete(self, path, data = {}):
         return self.request("DELETE", path, data)
 
     def request(self, method, path, data = {}, headers = {}):
         http = httplib2.Http()
         http.follow_redirects = True
 
-        body = json.dumps(data)
+        params = {"api_key": self.api_key}
+        body = ""
 
-        url = self.api_uri + path + "?api_key="+self.api_key
+        if method == "GET":
+            params.update(data)
+        else:
+            body = json.dumps(data)
+
+        url = self.api_uri + path + "?"+urlencode(params)
         return http.request(url, method, headers=headers, body=body)
 
 class Instance(object):
@@ -96,8 +102,8 @@ class Users(Resource):
 
         return User(self, resp, content)
 
-    def request_sms(self, user_id):
-        resp, content = self.get("/protected/json/sms/"+quote(str(user_id)))
+    def request_sms(self, user_id, options = {}):
+        resp, content = self.get("/protected/json/sms/"+quote(str(user_id)), options)
 
         return Instance(self, resp, content)
 
@@ -105,6 +111,6 @@ class Token(Instance):
     pass
 
 class Tokens(Resource):
-    def verify(self, device_id, token):
-        resp, content = self.get("/protected/json/verify/"+quote(str(token))+"/"+quote(str(device_id)))
+    def verify(self, device_id, token, options = {}):
+        resp, content = self.get("/protected/json/verify/"+quote(str(token))+"/"+quote(str(device_id)), options)
         return Token(self, resp, content)

@@ -17,10 +17,21 @@ class TokensTest(unittest.TestCase):
         self.users = Users("http://localhost:4567", 'testing_python_api_key')
         self.resource = Tokens("http://localhost:4567", 'testing_python_api_key')
 
-    def test_verify_token(self):
+    def test_verify_invalid_token(self):
         user = self.users.create('test@example.com', '345-782-4988', 1)
         token = self.resource.verify(user.id, 'token')
         self.assertIsInstance(token, Token)
         self.assertFalse(token.ok())
         self.assertEqual(token.errors()['error'], 'invalid token')
 
+    def test_verify_valid_token(self):
+        user = self.users.create('test@example.com', '345-782-4988', 1)
+        token = self.resource.verify(user.id, '0000000')
+        self.assertIsInstance(token, Token)
+        self.assertTrue(token.ok())
+
+    def test_force_verify_token(self):
+        user = self.users.create('test@example.com', '345-782-4988', 1)
+        token = self.resource.verify(user.id, '0000000', {"force": True})
+        self.assertIsInstance(token, Token)
+        self.assertTrue(token.ok())

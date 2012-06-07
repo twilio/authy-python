@@ -38,5 +38,3 @@ class UsersTest(unittest.TestCase):
         sms = self.resource.request_sms(user.id)
         self.assertTrue(sms.ok())
         self.assertEqual(user.errors(), {})
-
-
