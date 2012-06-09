@@ -13,3 +13,8 @@ VERSION 0.0.2
 
 - Bugfixes
 - Support for requesting sms tokens
+
+Version 0.0.3
+
+- Bugfixes
+- Allow to pass additional params to request_sms and verify token

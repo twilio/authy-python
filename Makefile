@@ -1,7 +1,7 @@
 test:
 	PYTHONPATH=. unit2 discover -s tests/
 
-dist:
+sdist:
 	python setup.py sdist
 
 publish:
