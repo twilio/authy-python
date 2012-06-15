@@ -76,6 +76,8 @@ class Instance(object):
 
         if(not isinstance(errors, dict)):
             errors = {"error": errors} # convert to dict for consistency
+        elif('errors' in errors):
+            errors = errors['errors']
 
         return errors
 

@@ -27,8 +27,7 @@ class UsersTest(unittest.TestCase):
 
         self.assertFalse(user.ok())
         self.assertIsInstance(user, User)
-        self.assertTrue('email' in user.content)
-        self.assertEqual(user.errors()['email'], ['is invalid'])
+        self.assertEqual(user.errors()['email'], 'is invalid')
         self.assertIsNone(user.id)
 
 
