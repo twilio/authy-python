@@ -26,7 +26,7 @@ To use this client you just need to import AuthyApiClient and initialize it with
 Now that you have an Authy API object you can start sending requests.
 
 
-### Creating Users
+## Creating Users
 
 Creating users is very easy, you need to pass an email, a cellphone and _optionally_ a country code:
    
@@ -47,7 +47,13 @@ if something goes wrong `ok()` returns `False` and you can see the errors using 
 it returns a dictionary explaining what went wrong with the request.
 
 
-### Verifying Tokens
+## Verifying Tokens
+
+
+__NOTE: Token verification is only enforced if the user has completed registration. To change this behaviour see Forcing Verification section below.__  
+   
+   >*Registration is completed once the user installs and registers the Authy mobile app or logins once successfully using SMS.*
+
 
 To verify users you need the user id and a token. The token you get from the user through your login form. 
 
@@ -59,7 +65,13 @@ Once again you can use `ok()` to verify whether the token was valid or not.
         # the user is valid
 
 
-### Requesting SMS Tokens
+### Forcing Verification
+
+If you wish to verify tokens even if the user has not yet complete registration, pass force=true when verifying the token.
+
+    verification = authy_api.tokens.verify('authy-id', 'token-entered-by-the-user', {"force": True})
+
+## Requesting SMS Tokens
 
 To request a SMS token you only need the user id.
 
@@ -67,6 +79,10 @@ To request a SMS token you only need the user id.
 
 As always, you can use `ok()` to verify if the token was sent. To be able to use this method you need to have activated the SMS plugin for your Authy App.
 
+This call will be ignored if the user is using the Authy Mobile App. If you still want to send
+the SMS pass force=true as an option
+
+	sms = authy_api.users.request_sms('authy-id', {"force": true});
 
 ### More…
 
