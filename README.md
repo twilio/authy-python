@@ -28,6 +28,9 @@ Now that you have an Authy API object you can start sending requests.
 
 ## Creating Users
 
+__NOTE: User is matched based on cellphone and country code not e-mail.
+A cellphone is uniquely associated with an authy_id.__  
+
 Creating users is very easy, you need to pass an email, a cellphone and _optionally_ a country code:
    
     user = authy_api.users.create('new_user@email.com', '405-342-5699', 57) #email, cellphone, area_code
