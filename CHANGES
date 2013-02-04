@@ -24,3 +24,9 @@ Version 0.0.4
 -------------
 
 - Improve error parsing
+
+Version 1.0.0
+-------------
+
+- Force token verification by default
+
