@@ -13,10 +13,11 @@ from authy.api.resources import Users
 class ApiClientTest(unittest.TestCase):
 
     def setUp(self):
-        self.api = AuthyApiClient("http://localhost:4567", 'testing_python_api_key')
+        self.api = AuthyApiClient("bf12974d70818a08199d17d5e2bae630", "http://sandbox-api.authy.com")
 
     def test_tokens(self):
         self.assertIsInstance(self.api.tokens, Tokens)
 
     def test_users(self):
         self.assertIsInstance(self.api.users, Users)
+

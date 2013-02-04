@@ -114,5 +114,8 @@ class Token(Instance):
 
 class Tokens(Resource):
     def verify(self, device_id, token, options = {}):
+        if 'force' not in options:
+            options['force'] = "true"
         resp, content = self.get("/protected/json/verify/"+quote(str(token))+"/"+quote(str(device_id)), options)
         return Token(self, resp, content)
+

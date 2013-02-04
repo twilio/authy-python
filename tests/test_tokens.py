@@ -14,8 +14,8 @@ from authy.api.resources import Users
 class TokensTest(unittest.TestCase):
 
     def setUp(self):
-        self.users = Users("http://localhost:4567", 'testing_python_api_key')
-        self.resource = Tokens("http://localhost:4567", 'testing_python_api_key')
+        self.users = Users("http://sandbox-api.authy.com", 'bf12974d70818a08199d17d5e2bae630')
+        self.resource = Tokens("http://sandbox-api.authy.com", 'bf12974d70818a08199d17d5e2bae630')
 
     def test_verify_invalid_token(self):
         user = self.users.create('test@example.com', '345-782-4988', 1)

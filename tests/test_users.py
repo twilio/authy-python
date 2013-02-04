@@ -12,7 +12,7 @@ from authy.api.resources import Users
 class UsersTest(unittest.TestCase):
 
     def setUp(self):
-        self.resource = Users("http://localhost:4567", 'testing_python_api_key')
+        self.resource = Users("http://sandbox-api.authy.com", 'bf12974d70818a08199d17d5e2bae630')
 
     def test_create_valid_user(self):
         user = self.resource.create('test@example.com', '3457824988', 1)
