@@ -40,7 +40,7 @@ in this case `57` is the country code(Colombia), use `1` for USA. If non are spe
 You can easily see if the user was created by calling `ok()`.
 If request went right, you need to store the authy id in your database. Use `user.id` to get this `id` in your database.
 
-    if(user.ok()):
+    if user.ok():
         # store user.id in your user database
 
 if something goes wrong `ok()` returns `False` and you can see the errors using the following code
@@ -64,7 +64,7 @@ To verify users you need the user id and a token. The token you get from the use
 
 Once again you can use `ok()` to verify whether the token was valid or not.
 
-    if(verification.ok()):
+    if verification.ok():
         # the user is valid
 
 
@@ -85,7 +85,21 @@ As always, you can use `ok()` to verify if the token was sent. To be able to use
 This call will be ignored if the user is using the Authy Mobile App. If you still want to send
 the SMS pass force=true as an option
 
-	sms = authy_api.users.request_sms('authy-id', {"force": true});
+	sms = authy_api.users.request_sms('authy-id', {"force": True});
+
+### Application statistics and details
+
+To request application statistics, use
+
+        statistics = authy_api.app.stats()
+        if statistics.ok():
+            print statistics.content
+        else:
+            print statistics.errors()
+
+For application details,
+
+        details = authy_api.app.details()
 
 ### More…
 
