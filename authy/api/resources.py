@@ -119,3 +119,15 @@ class Tokens(Resource):
         resp, content = self.get("/protected/json/verify/"+quote(str(token))+"/"+quote(str(device_id)), options)
         return Token(self, resp, content)
 
+class AppInfo(Instance):
+    pass
+
+
+class App(Resource):
+    def details(self):
+        resp, content = self.get("/protected/json/app/details")
+        return AppInfo(self, resp, content)
+
+    def stats(self):
+        resp, content = self.get("/protected/json/app/stats")
+        return AppInfo(self, resp, content)
