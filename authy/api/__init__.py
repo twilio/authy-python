@@ -3,7 +3,8 @@ import os
 from authy import AuthyException
 from authy.api.resources import Users
 from authy.api.resources import Tokens
-from authy.api.resources import App
+from authy.api.resources import Apps
+from authy.api.resources import StatsResource
 
 from urllib import urlencode
 from urlparse import urljoin
@@ -20,5 +21,7 @@ class AuthyApiClient(object):
         self.api_uri = api_uri
         self.users = Users(api_uri, api_key)
         self.tokens = Tokens(api_uri, api_key)
-        self.app = App(api_uri, api_key)
+        self.apps = Apps(api_uri, api_key)
+        self.stats = StatsResource(api_uri, api_key)
         self.api_key = api_key
+

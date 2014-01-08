@@ -78,28 +78,30 @@ If you wish to verify tokens even if the user has not yet complete registration,
 
 To request a SMS token you only need the user id.
 
-	sms = authy_api.users.request_sms('authy-id')
+    sms = authy_api.users.request_sms('authy-id')
 
 As always, you can use `ok()` to verify if the token was sent. To be able to use this method you need to have activated the SMS plugin for your Authy App.
 
 This call will be ignored if the user is using the Authy Mobile App. If you still want to send
 the SMS pass force=true as an option
 
-	sms = authy_api.users.request_sms('authy-id', {"force": True});
+    sms = authy_api.users.request_sms('authy-id', {"force": True});
 
-### Application statistics and details
+### Application Details
+
+For application details,
+
+        app = authy_api.apps.fetch()
+
+### Application Stats
 
 To request application statistics, use
 
-        statistics = authy_api.app.stats()
+        statistics = authy_api.stats.fetch()
         if statistics.ok():
             print statistics.content
         else:
             print statistics.errors()
-
-For application details,
-
-        details = authy_api.app.details()
 
 ### More…
 

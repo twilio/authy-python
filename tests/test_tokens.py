@@ -35,3 +35,4 @@ class TokensTest(unittest.TestCase):
         token = self.resource.verify(user.id, '0000000', {"force": True})
         self.assertIsInstance(token, Token)
         self.assertTrue(token.ok())
+

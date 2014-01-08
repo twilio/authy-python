@@ -81,6 +81,9 @@ class Instance(object):
 
         return errors
 
+    def __getitem__(self, key):
+        return self.content[key]
+
 class User(Instance):
     def __init__(self, resource, response, content):
         super(User, self).__init__(resource, response, content)
@@ -119,15 +122,19 @@ class Tokens(Resource):
         resp, content = self.get("/protected/json/verify/"+quote(str(token))+"/"+quote(str(device_id)), options)
         return Token(self, resp, content)
 
-class AppInfo(Instance):
+class App(Instance):
     pass
 
-
-class App(Resource):
-    def details(self):
+class Apps(Resource):
+    def fetch(self):
         resp, content = self.get("/protected/json/app/details")
-        return AppInfo(self, resp, content)
+        return App(self, resp, content)
 
-    def stats(self):
+class Stats(Instance):
+    pass
+
+class StatsResource(Resource):
+    def fetch(self):
         resp, content = self.get("/protected/json/app/stats")
-        return AppInfo(self, resp, content)
+        return Stats(self, resp, content)
+
