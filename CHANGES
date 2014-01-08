@@ -30,3 +30,9 @@ Version 1.0.0
 
 - Force token verification by default
 
+Version 1.1.0
+-------------
+
+- Add support for fetching application details.
+- Add support for fetching application statistics.
+
