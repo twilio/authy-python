@@ -21,7 +21,7 @@ To use this client you just need to import AuthyApiClient and initialize it with
 
 
     from authy.api import AuthyApiClient
-    authy_api = AuthyApiClient('#your_api_key')  
+    authy_api = AuthyApiClient('#your_api_key')
 
 Now that you have an Authy API object you can start sending requests.
 
@@ -29,10 +29,10 @@ Now that you have an Authy API object you can start sending requests.
 ## Creating Users
 
 __NOTE: User is matched based on cellphone and country code not e-mail.
-A cellphone is uniquely associated with an authy_id.__  
+A cellphone is uniquely associated with an authy_id.__
 
 Creating users is very easy, you need to pass an email, a cellphone and _optionally_ a country code:
-   
+
     user = authy_api.users.create('new_user@email.com', '405-342-5699', 57) #email, cellphone, area_code
 
 in this case `57` is the country code(Colombia), use `1` for USA. If non are specified it defaults to USA.
@@ -53,12 +53,12 @@ it returns a dictionary explaining what went wrong with the request.
 ## Verifying Tokens
 
 
-__NOTE: Token verification is only enforced if the user has completed registration. To change this behaviour see Forcing Verification section below.__  
-   
+__NOTE: Token verification is only enforced if the user has completed registration. To change this behaviour see Forcing Verification section below.__
+
    >*Registration is completed once the user installs and registers the Authy mobile app or logins once successfully using SMS.*
 
 
-To verify users you need the user id and a token. The token you get from the user through your login form. 
+To verify users you need the user id and a token. The token you get from the user through your login form.
 
     verification = authy_api.tokens.verify('authy-id', 'token-entered-by-the-user')
 
@@ -86,6 +86,8 @@ This call will be ignored if the user is using the Authy Mobile App. If you stil
 the SMS pass force=true as an option
 
     sms = authy_api.users.request_sms('authy-id', {"force": True});
+
+If the SMS token request was ignored because the user has the Authy Mobile App, then `sms.ignored()` will return `True`.
 
 ### Application Details
 
