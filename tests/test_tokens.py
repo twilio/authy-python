@@ -22,7 +22,7 @@ class TokensTest(unittest.TestCase):
         token = self.resource.verify(user.id, 'token')
         self.assertIsInstance(token, Token)
         self.assertFalse(token.ok())
-        self.assertEqual(token.errors()['token'], 'is invalid')
+        self.assertEqual(token.errors()['message'], 'token is invalid')
 
     def test_verify_valid_token(self):
         user = self.users.create('test@example.com', '345-782-4988', 1)
