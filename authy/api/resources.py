@@ -1,11 +1,5 @@
-import re
-import datetime
-import logging
-import authy
-from authy import AuthyException
-from authy import AuthyApiException
-from urllib import urlencode, quote
-from urlparse import urlparse
+import requests
+from urllib import quote
 
 # import json
 try:
@@ -15,12 +9,6 @@ except ImportError:
         import simplejson as json
     except ImportError:
         from django.utils import simplejson as json
-
-# import httplib2
-try:
-    import httplib2
-except ImportError:
-    from authy.contrib import httplib2
 
 
 class Resource(object):
@@ -41,32 +29,28 @@ class Resource(object):
         return self.request("DELETE", path, data)
 
     def request(self, method, path, data = {}, headers = {}):
-        http = httplib2.Http()
-        http.follow_redirects = True
-
+        url = self.api_uri + path
         params = {"api_key": self.api_key}
-        body = ""
 
         if method == "GET":
             params.update(data)
+            return requests.request(method, url, headers=headers, params=params)
         else:
-            body = json.dumps(data)
+            return requests.request(method, url, headers=headers, params=params, data=json.dumps(data))
 
-        url = self.api_uri + path + "?"+urlencode(params)
-        return http.request(url, method, headers=headers, body=body)
 
 class Instance(object):
-    def __init__(self, resource, response, content):
+    def __init__(self, resource, response):
         self.resource = resource
         self.response = response
 
         try:
-            self.content = json.loads(content)
+            self.content = self.response.json()
         except ValueError:
-            self.content = content
+            self.content = self.response.text
 
     def ok(self):
-        return self.response['status'] == '200'
+        return self.response.status_code == 200
 
     def errors(self):
         if self.ok():
@@ -84,9 +68,10 @@ class Instance(object):
     def __getitem__(self, key):
         return self.content[key]
 
+
 class User(Instance):
-    def __init__(self, resource, response, content):
-        super(User, self).__init__(resource, response, content)
+    def __init__(self, resource, response):
+        super(User, self).__init__(resource, response)
         if(isinstance(self.content, dict) and 'user' in self.content):
             self.id = self.content['user']['id']
         else:
@@ -103,38 +88,44 @@ class Users(Resource):
             }
         }
 
-        resp, content = self.post("/protected/json/users/new", data)
+        resp = self.post("/protected/json/users/new", data)
 
-        return User(self, resp, content)
+        return User(self, resp)
 
     def request_sms(self, user_id, options = {}):
-        resp, content = self.get("/protected/json/sms/"+quote(str(user_id)), options)
+        resp = self.get("/protected/json/sms/"+quote(str(user_id)), options)
 
-        return Instance(self, resp, content)
+        return Instance(self, resp)
+
 
 class Token(Instance):
     pass
+
 
 class Tokens(Resource):
     def verify(self, device_id, token, options = {}):
         if 'force' not in options:
             options['force'] = "true"
-        resp, content = self.get("/protected/json/verify/"+quote(str(token))+"/"+quote(str(device_id)), options)
-        return Token(self, resp, content)
+        resp = self.get("/protected/json/verify/"+quote(str(token))+"/"+quote(str(device_id)), options)
+        return Token(self, resp)
+
 
 class App(Instance):
     pass
 
+
 class Apps(Resource):
     def fetch(self):
-        resp, content = self.get("/protected/json/app/details")
-        return App(self, resp, content)
+        resp = self.get("/protected/json/app/details")
+        return App(self, resp)
+
 
 class Stats(Instance):
     pass
 
+
 class StatsResource(Resource):
     def fetch(self):
-        resp, content = self.get("/protected/json/app/stats")
-        return Stats(self, resp, content)
+        resp = self.get("/protected/json/app/stats")
+        return Stats(self, resp)
 
