@@ -1,7 +1,5 @@
-httplib2
-simplejson
-pyjwt
-unittest2
-mock
-nose
-sphinx
+distribute==0.6.34
+requests==2.2.1
+simplejson==3.4.0
+unittest2==0.5.1
+wsgiref==0.1.2

@@ -1,8 +1,8 @@
 from authy import __version__
 from setuptools import setup, find_packages
 
-# to install authy type the following command: 
-#     python setup.py install 
+# to install authy type the following command:
+#     python setup.py install
 #
 
 setup(
@@ -13,7 +13,7 @@ setup(
     author_email = "help@authy.com",
     url = "http://github.com/authy/python-authy",
     keywords = ["authy"],
-    install_requires = ["httplib2 >= 0.7, < 0.8", "simplejson"],
+    install_requires = ["requests>=2.2.1", "simplejson>=3.4.0"],
     packages = find_packages(),
     classifiers = [
         "Development Status :: 4 - Beta",
