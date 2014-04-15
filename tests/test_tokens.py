@@ -18,11 +18,12 @@ class TokensTest(unittest.TestCase):
         self.resource = Tokens("http://sandbox-api.authy.com", 'bf12974d70818a08199d17d5e2bae630')
 
     def test_verify_invalid_token(self):
-        user = self.users.create('test@example.com', '345-782-4988', 1)
+        user = self.users.create('test@example.com', '310-781-0860', 1)
         token = self.resource.verify(user.id, 'token')
         self.assertIsInstance(token, Token)
         self.assertFalse(token.ok())
-        self.assertEqual(token.errors()['token'], 'is invalid')
+        self.assertEqual(token.response.status_code, 401)
+        self.assertEqual(token.errors()['message'], 'Token is invalid.')
 
     def test_verify_valid_token(self):
         user = self.users.create('test@example.com', '345-782-4988', 1)

@@ -30,10 +30,10 @@ class UsersTest(unittest.TestCase):
         self.assertEqual(user.errors()['email'], 'is invalid')
         self.assertIsNone(user.id)
 
-
     def test_request_sms_token(self):
-        user = self.resource.create('testexample.com', '3457824988', 1)
-
+        user = self.resource.create('test@example.com', '3107810860', 1)
         sms = self.resource.request_sms(user.id)
         self.assertTrue(sms.ok())
+        self.assertTrue(sms.content['success'])
+        self.assertEqual(sms.errors(), {})
         self.assertEqual(user.errors(), {})
