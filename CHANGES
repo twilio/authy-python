@@ -36,3 +36,10 @@ Version 1.1.0
 - Add support for fetching application details.
 - Add support for fetching application statistics.
 
+Version 2.0.0
+-------------
+
+- Make use of requests dependency instead of httplib2.
+
+
+
