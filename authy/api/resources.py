@@ -97,6 +97,11 @@ class Users(Resource):
 
         return Instance(self, resp)
 
+    def delete_user(self, user_id):
+        resp = self.post("/protected/json/users/delete"+quote(str(user_id)))
+
+        return Instance(self, resp)
+
 
 class Token(Instance):
     pass
