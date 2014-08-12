@@ -129,20 +129,20 @@ class StatsResource(Resource):
         resp = self.get("/protected/json/app/stats")
         return Stats(self, resp)
 
-class PhoneInfo(Instance):
+class Phone(Instance):
     pass
 
-class PhoneIntelligence(Resource):
+class Phones(Resource):
     def verification_start(self, options = {}):
         if 'via' not in options:
             options['via'] = 'sms'
         resp = self.post("/protected/json/phones/verification/start", options)
-        return PhoneInfo(self, resp)
+        return Phone(self, resp)
 
     def verification_check(self, options = {}):
         resp = self.get("/protected/json/phones/verification/check", options)
-        return PhoneInfo(self, resp)
+        return Phone(self, resp)
 
     def info(self, options = {}):
         resp = self.get("/protected/json/phones/info", options)
-        return PhoneInfo(self, resp)
+        return Phone(self, resp)
