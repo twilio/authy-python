@@ -4,4 +4,5 @@ docs/tmp
 docs/build
 *.tmproj
 *.py[co]
+*.swp
 venv/
