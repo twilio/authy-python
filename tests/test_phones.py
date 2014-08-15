@@ -18,46 +18,28 @@ class PhonesTest(unittest.TestCase):
     def test_phones(self):
         self.assertIsInstance(self.api.phones, Phones)
 
-    def test_verification_start_without_country_code(self):
-        phone = self.phones.verification_start({
-            'via': 'sms',
-            'phone_number': '111-111-1111'
-        })
-        self.assertFalse(phone.ok())
-        self.assertRegexpMatches(phone.errors()['message'], 'Country code is mandatory')
+    def test_verification_start_without_via(self):
+        phone = self.phones.verification_start('111-111-1111', '1')
+        self.assertTrue(phone.ok(), msg="errors: {0}".format(phone.errors()))
+        self.assertRegexpMatches(phone.errors()['message'], 'Text message sent')
 
     def test_verification_start(self):
-        phone = self.phones.verification_start({
-            'via': 'sms',
-            'country_code': '1',
-            'phone_number': '111-111-1111'
-        })
+        phone = self.phones.verification_start('111-111-1111', '1', 'sms')
         self.assertTrue(phone.ok(), msg="errors: {0}".format(phone.errors()))
         self.assertRegexpMatches(phone['message'], 'Text message sent')
 
     def test_verification_check_incorrect_code(self):
-        phone = self.phones.verification_check({
-            'country_code': '1',
-            'phone_number': '111-111-1111',
-            'verification_code': '1234'
-        })
+        phone = self.phones.verification_check('111-111-1111', '1', '1234')
         self.assertFalse(phone.ok(), msg="errors: {0}".format(phone.errors()))
         self.assertRegexpMatches(phone.errors()['message'], 'Verification code is incorrect.')
 
     def test_verification_check(self):
-        phone = self.phones.verification_check({
-            'country_code': '1',
-            'phone_number': '111-111-1111',
-            'verification_code': '0000'
-        })
+        phone = self.phones.verification_check('111-111-1111', '1', '0000')
         self.assertTrue(phone.ok(), msg="errors: {0}".format(phone.errors()))
         self.assertRegexpMatches(phone['message'], 'Verification code is correct')
 
-    def test_phone(self):
-        phone = self.phones.info({
-            'country_code': '1',
-            'phone_number': '7754615609'
-        })
+    def test_phone_info(self):
+        phone = self.phones.info('7754615609', '1')
         self.assertTrue(phone.ok(), msg="errors: {0}".format(phone.errors()))
         self.assertRegexpMatches(phone['message'], 'Phone number information as of')
         self.assertRegexpMatches(phone['type'], 'voip')

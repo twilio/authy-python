@@ -110,7 +110,30 @@ To request application statistics, use
         else:
             print statistics.errors()
 
-### More…
+## Phone Verification && Info
+
+Authy has an API to verify users via phone calls or sms. Also, user phone information can be gethered
+for support and verification purposes.
+
+### Phone Verification Start
+
+In order to start a phone verification, we ask the API to send a token to the user via sms or call:
+
+    authy_api.phones.verification_start(phone_number, country_code, via='sms')
+
+### Phone Verification Start
+
+Once you get the verification from user, you can check if it's valid with:
+
+    authy_api.phones.verification_check(phone_number, country_code, verification_code)
+
+### Phone Info
+
+If you want to gather additional information about user phone, use phones info.
+
+    authy_api.phones.info(phone_number, country_code)
+
+## More…
 
 You can fine the full API documentation in the [official documentation](https://docs.authy.com) page.
 

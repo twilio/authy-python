@@ -138,16 +138,28 @@ class Phone(Instance):
     pass
 
 class Phones(Resource):
-    def verification_start(self, options = {}):
-        if 'via' not in options:
-            options['via'] = 'sms'
+    def verification_start(self, phone_number, country_code, via = 'sms'):
+        options = {
+            'phone_number': phone_number,
+            'country_code': country_code,
+            'via': via
+        }
         resp = self.post("/protected/json/phones/verification/start", options)
         return Phone(self, resp)
 
-    def verification_check(self, options = {}):
+    def verification_check(self, phone_number, country_code, verification_code):
+        options = {
+            'phone_number': phone_number,
+            'country_code': country_code,
+            'verification_code': verification_code
+        }
         resp = self.get("/protected/json/phones/verification/check", options)
         return Phone(self, resp)
 
-    def info(self, options = {}):
+    def info(self, phone_number, country_code):
+        options = {
+            'phone_number': phone_number,
+            'country_code': country_code
+        }
         resp = self.get("/protected/json/phones/info", options)
         return Phone(self, resp)
