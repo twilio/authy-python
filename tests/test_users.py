@@ -37,3 +37,10 @@ class UsersTest(unittest.TestCase):
         self.assertTrue(sms.content['success'])
         self.assertEqual(sms.errors(), {})
         self.assertEqual(user.errors(), {})
+
+    def test_get_user_status(self):
+        user = self.resource.create('test@example.com', '3107810860', 1)
+        status = self.resource.status(user.id)
+        self.assertTrue(status.ok(), msg="errors: {0}".format(status.errors()))
+        self.assertTrue(status.content['success'])
+        self.assertEqual(status.errors(), {})

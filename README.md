@@ -87,13 +87,20 @@ the SMS pass force=true as an option
 
     sms = authy_api.users.request_sms('authy-id', {"force": True});
 
-### Application Details
+## Checking User Status
+
+To check a user status, just pass the user id.
+
+    user = authy_api.users.status('authy-id')
+
+
+## Application Details
 
 For application details,
 
         app = authy_api.apps.fetch()
 
-### Application Stats
+## Application Stats
 
 To request application statistics, use
 

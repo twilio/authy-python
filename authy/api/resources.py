@@ -97,6 +97,11 @@ class Users(Resource):
 
         return Instance(self, resp)
 
+    def status(self, user_id):
+        resp = self.get("/protected/json/users/{0}/status".format(user_id))
+
+        return User(self, resp)
+
 
 class Token(Instance):
     pass
