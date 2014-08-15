@@ -21,7 +21,7 @@ class PhonesTest(unittest.TestCase):
     def test_verification_start_without_via(self):
         phone = self.phones.verification_start('111-111-1111', '1')
         self.assertTrue(phone.ok(), msg="errors: {0}".format(phone.errors()))
-        self.assertRegexpMatches(phone.errors()['message'], 'Text message sent')
+        self.assertRegexpMatches(phone['message'], 'Text message sent')
 
     def test_verification_start(self):
         phone = self.phones.verification_start('111-111-1111', '1', 'sms')
