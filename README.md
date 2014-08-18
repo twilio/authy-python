@@ -121,7 +121,7 @@ In order to start a phone verification, we ask the API to send a token to the us
 
     authy_api.phones.verification_start(phone_number, country_code, via='sms')
 
-### Phone Verification Start
+### Phone Verification Check
 
 Once you get the verification from user, you can check if it's valid with:
 
