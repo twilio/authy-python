@@ -44,3 +44,10 @@ class UsersTest(unittest.TestCase):
         self.assertTrue(status.ok(), msg="errors: {0}".format(status.errors()))
         self.assertTrue(status.content['success'])
         self.assertEqual(status.errors(), {})
+
+    def test_delete_user(self):
+        user = self.resource.create('test@example.com', '3107810860', 1)
+        status = self.resource.delete(user.id)
+        self.assertTrue(status.ok())
+        self.assertTrue(status.content['success'])
+        self.assertEqual(status.errors(), {})
