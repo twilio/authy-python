@@ -48,3 +48,10 @@ Version 2.1.0
 - Add support for start and check phone verification.
 - Add support for get phone info.
 
+
+Version 2.1.1
+-------------
+
+- Add support for delete user endpoint.
+- Add method to verify if an SMS request was ignored.
+
