@@ -95,6 +95,12 @@ To check a user status, just pass the user id.
 
     user = authy_api.users.status('authy-id')
 
+## Delete User
+
+To delete a user, just pass the user id.
+
+    user = authy_api.users.delete('authy-id')
+
 ## Application Details
 
 For application details,
