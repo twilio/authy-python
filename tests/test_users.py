@@ -38,6 +38,14 @@ class UsersTest(unittest.TestCase):
         self.assertEqual(sms.errors(), {})
         self.assertEqual(user.errors(), {})
 
+    def test_sms_ignored(self):
+        user = self.resource.create('test@example.com', '3107810860', 1)
+        sms = self.resource.request_sms(user.id)
+        self.assertTrue(sms.ok())
+        # fake 'ignored' field in JSON response
+        sms.content['ignored'] = 'true'
+        self.assertTrue(sms.ignored())
+
     def test_get_user_status(self):
         user = self.resource.create('test@example.com', '3107810860', 1)
         status = self.resource.status(user.id)

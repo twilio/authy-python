@@ -87,12 +87,13 @@ the SMS pass force=true as an option
 
     sms = authy_api.users.request_sms('authy-id', {"force": True});
 
+If the SMS token request was ignored because the user has the Authy Mobile App, then `sms.ignored()` will return `True`.
+
 ## Checking User Status
 
 To check a user status, just pass the user id.
 
     user = authy_api.users.status('authy-id')
-
 
 ## Application Details
 

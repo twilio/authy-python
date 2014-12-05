@@ -68,6 +68,13 @@ class Instance(object):
     def __getitem__(self, key):
         return self.content[key]
 
+class Sms(Instance):
+    def ignored(self):
+        try:
+            self.content['ignored']
+            return True
+        except KeyError:
+            return False
 
 class User(Instance):
     def __init__(self, resource, response):
@@ -95,7 +102,7 @@ class Users(Resource):
     def request_sms(self, user_id, options = {}):
         resp = self.get("/protected/json/sms/"+quote(str(user_id)), options)
 
-        return Instance(self, resp)
+        return Sms(self, resp)
 
     def status(self, user_id):
         resp = self.get("/protected/json/users/{0}/status".format(user_id))
