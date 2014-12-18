@@ -142,7 +142,7 @@ If you want to gather additional information about user phone, use phones info.
 
 ## More…
 
-You can fine the full API documentation in the [official documentation](https://docs.authy.com) page.
+You can find the full API documentation in the [official documentation](https://docs.authy.com) page.
 
 
 ## Contributing
