@@ -1,10 +1,12 @@
-__version_info__ = ('2', '1', '1')
+__version_info__ = ('2', '1', '2')
 __version__ = '.'.join(__version_info__)
 
 
 class AuthyException(Exception):
     pass
 
+class AuthyFormatException(AuthyException):
+	pass
 
 class AuthyApiException(AuthyException):
 

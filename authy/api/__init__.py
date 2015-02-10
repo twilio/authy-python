@@ -1,3 +1,4 @@
+from authy import __version__
 from authy.api.resources import Users
 from authy.api.resources import Tokens
 from authy.api.resources import Apps
@@ -20,4 +21,7 @@ class AuthyApiClient(object):
         self.stats = StatsResource(api_uri, api_key)
         self.phones = Phones(api_uri, api_key)
         self.api_key = api_key
+
+    def version(self):
+        return __version__
 

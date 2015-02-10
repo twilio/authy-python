@@ -21,3 +21,5 @@ class ApiClientTest(unittest.TestCase):
     def test_users(self):
         self.assertIsInstance(self.api.users, Users)
 
+    def test_version(self):
+    	self.assertRegexpMatches(self.api.version(), '\d.\d*')

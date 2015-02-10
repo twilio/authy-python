@@ -1,4 +1,6 @@
 import requests
+import platform
+from authy import __version__, AuthyFormatException
 from urllib import quote
 
 # import json
@@ -15,6 +17,7 @@ class Resource(object):
     def __init__(self, api_uri, api_key):
         self.api_uri = api_uri
         self.api_key = api_key
+        self.def_headers = self.__default_headers()
 
     def post(self, path, data = {}):
         return self.request("POST", path, data, {'Content-Type': 'application/json'})
@@ -31,12 +34,21 @@ class Resource(object):
     def request(self, method, path, data = {}, headers = {}):
         url = self.api_uri + path
         params = {"api_key": self.api_key}
+        headers = dict(self.def_headers.items() + headers.items())
 
         if method == "GET":
             params.update(data)
             return requests.request(method, url, headers=headers, params=params)
         else:
             return requests.request(method, url, headers=headers, params=params, data=json.dumps(data))
+
+    def __default_headers(self):
+        return {
+            'User-Agent': "AuthyPython/{0} ({1}; Python {2})".format(
+            __version__, 
+            platform.platform(True), 
+            platform.python_version()
+        )}
 
 
 class Instance(object):
@@ -115,15 +127,29 @@ class Users(Resource):
         return User(self, resp)
 
 class Token(Instance):
-    pass
-
+    def ok(self):
+        if super(Token, self).ok():
+            return '"token":"is valid"' in self.response.content
+        return False
 
 class Tokens(Resource):
     def verify(self, device_id, token, options = {}):
+        self.__validate(token, device_id)
         if 'force' not in options:
             options['force'] = "true"
         resp = self.get("/protected/json/verify/"+quote(str(token))+"/"+quote(str(device_id)), options)
         return Token(self, resp)
+
+    def __validate(self, token, device_id):
+        self.__validate_digit(token, "Invalid Token. Only digits accepted.")
+        self.__validate_digit(device_id, "Invalid Authy id. Only digits accepted.")
+        length = len(token)
+        if length < 6 or length > 10:
+            raise AuthyFormatException("Invalid Token. Unexpected length.")
+
+    def __validate_digit(self, var, message):
+        if not isinstance(var, (int, long)) and not var.isdigit():
+            raise AuthyFormatException(message)
 
 
 class App(Instance):

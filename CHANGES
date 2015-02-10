@@ -55,3 +55,10 @@ Version 2.1.1
 - Add support for delete user endpoint.
 - Add method to verify if an SMS request was ignored.
 
+
+Version 2.1.2
+-------------
+
+- Add Authy User-Agent to requests headers.
+- Add method to get current library version.
+
