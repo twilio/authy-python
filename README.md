@@ -117,7 +117,7 @@ To request application statistics, use
     else:
         print statistics.errors()
 
-## Phone Verification && Info
+## Phone Verification
 
 Authy has an API to verify users via phone calls or sms. Also, user phone information can be gethered
 for support and verification purposes.
@@ -142,7 +142,7 @@ Once you get the verification from user, you can check if it's valid with:
 
     authy_api.phones.verification_check(phone_number, country_code, verification_code)
 
-### Phone Info
+## Phone Intelligence
 
 If you want to gather additional information about user phone, use phones info.
 
