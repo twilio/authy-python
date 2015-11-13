@@ -45,8 +45,8 @@ class Resource(object):
     def __default_headers(self):
         return {
             'User-Agent': "AuthyPython/{0} ({1}; Python {2})".format(
-            __version__, 
-            platform.platform(True), 
+            __version__,
+            platform.platform(True),
             platform.python_version()
         )}
 
@@ -175,12 +175,16 @@ class Phone(Instance):
     pass
 
 class Phones(Resource):
-    def verification_start(self, phone_number, country_code, via = 'sms'):
+    def verification_start(self, phone_number, country_code, via = 'sms', locale = None):
         options = {
             'phone_number': phone_number,
             'country_code': country_code,
             'via': via
         }
+
+        if locale:
+            options['locale'] = locale
+
         resp = self.post("/protected/json/phones/verification/start", options)
         return Phone(self, resp)
 
