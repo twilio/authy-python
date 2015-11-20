@@ -62,3 +62,11 @@ Version 2.1.2
 - Add Authy User-Agent to requests headers.
 - Add method to get current library version.
 
+
+Version 2.1.3
+-------------
+
+- Supporting "locale" parameter for Phone Verification. Supported languages are 'en', 'es', 'pt', 'it', 'fr', 'de'.
+- Move phone intelligence doc to its own section.
+- Improvements to README.
+- Updating copyright year.
