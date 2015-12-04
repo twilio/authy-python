@@ -163,5 +163,6 @@ To run tests:
 
     make test
 
+## Copyright
 
-
+Copyright (c) 2011-2020 Authy Inc. See LICENSE for further details.
