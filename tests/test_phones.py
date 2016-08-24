@@ -1,4 +1,6 @@
 import sys
+import test_helper
+
 if sys.version_info < (2, 7):
     import unittest2 as unittest
 else:
@@ -12,8 +14,8 @@ from authy.api.resources import Phone
 class PhonesTest(unittest.TestCase):
 
     def setUp(self):
-        self.api = AuthyApiClient("bf12974d70818a08199d17d5e2bae630", "http://sandbox-api.authy.com")
-        self.phones = Phones("http://sandbox-api.authy.com", 'bf12974d70818a08199d17d5e2bae630')
+        self.api = AuthyApiClient(test_helper.API_KEY, test_helper.API_URL)
+        self.phones = Phones(test_helper.API_URL, test_helper.API_KEY)
 
     def test_phones(self):
         self.assertIsInstance(self.api.phones, Phones)
