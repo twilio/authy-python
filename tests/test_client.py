@@ -1,4 +1,6 @@
 import sys
+import test_helper
+
 if sys.version_info < (2, 7):
     import unittest2 as unittest
 else:
@@ -13,7 +15,7 @@ from authy.api.resources import Users
 class ApiClientTest(unittest.TestCase):
 
     def setUp(self):
-        self.api = AuthyApiClient("bf12974d70818a08199d17d5e2bae630", "http://sandbox-api.authy.com")
+        self.api = AuthyApiClient(test_helper.API_KEY, test_helper.API_URL)
 
     def test_tokens(self):
         self.assertIsInstance(self.api.tokens, Tokens)

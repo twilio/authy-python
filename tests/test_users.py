@@ -1,4 +1,6 @@
 import sys
+import test_helper
+
 if sys.version_info < (2, 7):
     import unittest2 as unittest
 else:
@@ -12,7 +14,7 @@ from authy.api.resources import Users
 class UsersTest(unittest.TestCase):
 
     def setUp(self):
-        self.resource = Users("http://sandbox-api.authy.com", 'bf12974d70818a08199d17d5e2bae630')
+        self.resource = Users(test_helper.API_URL, test_helper.API_KEY)
 
     def test_create_valid_user(self):
         user = self.resource.create('test@example.com', '3457824988', 1)
