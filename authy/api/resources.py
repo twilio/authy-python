@@ -1,5 +1,6 @@
 import requests
 import platform
+
 from authy import __version__, AuthyFormatException
 try:
     from urllib import quote
@@ -36,8 +37,13 @@ class Resource(object):
 
     def request(self, method, path, data = {}, headers = {}):
         url = self.api_uri + path
-        params = {"api_key": self.api_key}
-        headers = dict(self.def_headers.items() + headers.items())
+
+        params  = {}
+        headers = dict(
+                self.def_headers.items() +
+                headers.items() +
+                [('X-Authy-API-Key', self.api_key)]
+            )
 
         if method == "GET":
             params.update(data)
