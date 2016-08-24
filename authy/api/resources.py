@@ -1,7 +1,10 @@
 import requests
 import platform
 from authy import __version__, AuthyFormatException
-from urllib import quote
+try:
+    from urllib import quote
+except ImportError:
+    from urllib.parse import quote
 
 # import json
 try:
