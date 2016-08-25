@@ -6,16 +6,16 @@ from setuptools import setup, find_packages
 #
 
 setup(
-    name = "authy",
-    version = __version__,
-    description = "Authy API Client",
-    author = "Authy Inc",
-    author_email = "dev-support@authy.com",
-    url = "http://github.com/authy/authy-python",
-    keywords = ["authy", "two factor", "authentication"],
-    install_requires = ["requests>=2.2.1", "simplejson>=3.4.0"],
-    packages = find_packages(),
-    classifiers = [
+    name="authy",
+    version=__version__,
+    description="Authy API Client",
+    author="Authy Inc",
+    author_email="dev-support@authy.com",
+    url="http://github.com/authy/authy-python",
+    keywords=["authy", "two factor", "authentication"],
+    install_requires=["requests>=2.2.1", "simplejson>=3.4.0", "six>=1.8.0"],
+    packages=find_packages(),
+    classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
@@ -26,7 +26,7 @@ setup(
         "Programming Language :: Python :: 2.7",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Security"
-        ],
-    long_description = """\
+    ],
+    long_description="""\
     Authy API Client for Python
 """ )
