@@ -33,7 +33,7 @@ class UsersTest(unittest.TestCase):
         self.assertIsNone(user.id)
 
     def test_request_sms_token(self):
-        user = self.resource.create('test@example.com', '3107810860', 1)
+        user = self.resource.create('test@example.com', '202-555-0158', 1)
         sms = self.resource.request_sms(user.id)
         self.assertTrue(sms.ok())
         self.assertTrue(sms.content['success'])
@@ -41,7 +41,7 @@ class UsersTest(unittest.TestCase):
         self.assertEqual(user.errors(), {})
 
     def test_sms_ignored(self):
-        user = self.resource.create('test@example.com', '3107810860', 1)
+        user = self.resource.create('test@example.com', '202-555-0197', 1)
         sms = self.resource.request_sms(user.id)
         self.assertTrue(sms.ok())
         # fake 'ignored' field in JSON response

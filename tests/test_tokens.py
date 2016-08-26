@@ -38,7 +38,7 @@ class TokensTest(unittest.TestCase):
             self.assertEqual(e.message, 'Invalid Authy id. Only digits accepted.')
 
     def test_verify_longer_token(self):
-        user = self.users.create('test@example.com', '310-781-0860', 1)
+        user = self.users.create('test@example.com', '202-555-0166', 1)
         try:
             token = self.resource.verify(user.id, '00000001111')
             self.fail()
@@ -47,7 +47,7 @@ class TokensTest(unittest.TestCase):
             self.assertEqual(e.message, 'Invalid Token. Unexpected length.')
 
     def test_verify_invalid_token(self):
-        user = self.users.create('test@example.com', '310-781-0860', 1)
+        user = self.users.create('test@example.com', '202-555-0166', 1)
         token = self.resource.verify(user.id, '1111111')
         self.assertIsInstance(token, Token)
         self.assertFalse(token.ok())
@@ -55,13 +55,13 @@ class TokensTest(unittest.TestCase):
         self.assertEqual(token.errors()['message'], 'Token is invalid')
 
     def test_verify_valid_token(self):
-        user = self.users.create('test@example.com', '345-782-4988', 1)
+        user = self.users.create('test@example.com', '202-555-0166', 1)
         token = self.resource.verify(user.id, '0000000')
         self.assertIsInstance(token, Token)
         self.assertTrue(token.ok())
 
     def test_force_verify_token(self):
-        user = self.users.create('test@example.com', '345-782-4988', 1)
+        user = self.users.create('test@example.com', '202-555-0166', 1)
         token = self.resource.verify(user.id, '0000000', {"force": True})
         self.assertIsInstance(token, Token)
         self.assertTrue(token.ok())
