@@ -46,3 +46,6 @@ class PhonesTest(unittest.TestCase):
         self.assertRegexpMatches(phone['message'], 'Phone number information as of')
         self.assertRegexpMatches(phone['type'], 'landline')
         self.assertFalse(phone['ported'])
+
+if __name__ == "__main__":
+	    unittest.main()
