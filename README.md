@@ -194,6 +194,9 @@ Install development dependencies with pip:
 To run tests:
 
     make test
+or
+
+    make testfile tests/<test_case_file>
 
 ## Copyright
 
