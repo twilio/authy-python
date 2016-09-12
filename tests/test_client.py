@@ -25,3 +25,7 @@ class ApiClientTest(unittest.TestCase):
 
     def test_version(self):
     	self.assertRegexpMatches(self.api.version(), '\d.\d*')
+
+
+if __name__ == "__main__":
+	    unittest.main()

@@ -66,3 +66,5 @@ class TokensTest(unittest.TestCase):
         self.assertIsInstance(token, Token)
         self.assertTrue(token.ok())
 
+if __name__ == "__main__":
+	    unittest.main()
