@@ -70,3 +70,9 @@ Version 2.1.3
 - Move phone intelligence doc to its own section.
 - Improvements to README.
 - Updating copyright year.
+
+
+Version 2.1.4
+-------------
+
+- Added make target to run independent test files.
