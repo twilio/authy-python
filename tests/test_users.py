@@ -61,3 +61,6 @@ class UsersTest(unittest.TestCase):
         self.assertTrue(user.ok())
         self.assertTrue(user.content['success'])
         self.assertEqual(user.errors(), {})
+
+if __name__ == "__main__":
+	    unittest.main()
