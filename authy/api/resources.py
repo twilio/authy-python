@@ -60,6 +60,12 @@ class Resource(object):
             return requests.request(method, url, headers=headers, params=params, data=json.dumps(data))
 
     def __default_headers(self):
+        platform_value = ""
+        try:
+          platform_value = platform.platform(True)
+        except:
+          platform_value = "unknown_platform"
+
         return {
             'User-Agent': "AuthyPython/{0} ({1}; Python {2})".format(
                 __version__,
