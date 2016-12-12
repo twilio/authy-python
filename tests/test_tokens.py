@@ -67,4 +67,4 @@ class TokensTest(unittest.TestCase):
         self.assertTrue(token.ok())
 
 if __name__ == "__main__":
-	    unittest.main()
+        unittest.main()

@@ -6,7 +6,6 @@ if sys.version_info < (2, 7):
 else:
     import unittest
 
-from authy import AuthyException
 from authy.api import AuthyApiClient
 from authy.api.resources import Tokens
 from authy.api.resources import Users
@@ -24,8 +23,8 @@ class ApiClientTest(unittest.TestCase):
         self.assertIsInstance(self.api.users, Users)
 
     def test_version(self):
-    	self.assertRegexpMatches(self.api.version(), '\d.\d*')
+        self.assertRegexpMatches(self.api.version(), '\d.\d*')
 
 
 if __name__ == "__main__":
-	    unittest.main()
+        unittest.main()

@@ -6,7 +6,6 @@ if sys.version_info < (2, 7):
 else:
     import unittest
 
-from authy import AuthyException
 from authy.api.resources import User
 from authy.api.resources import Users
 
@@ -63,4 +62,4 @@ class UsersTest(unittest.TestCase):
         self.assertEqual(user.errors(), {})
 
 if __name__ == "__main__":
-	    unittest.main()
+        unittest.main()
