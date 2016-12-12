@@ -6,10 +6,9 @@ if sys.version_info < (2, 7):
 else:
     import unittest
 
-from authy import AuthyException
 from authy.api import AuthyApiClient
 from authy.api.resources import Phones
-from authy.api.resources import Phone
+
 
 class PhonesTest(unittest.TestCase):
 
@@ -48,4 +47,4 @@ class PhonesTest(unittest.TestCase):
         self.assertFalse(phone['ported'])
 
 if __name__ == "__main__":
-	    unittest.main()
+        unittest.main()

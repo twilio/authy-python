@@ -14,7 +14,7 @@ setup(
     url="http://github.com/authy/authy-python",
     keywords=["authy", "two factor", "authentication"],
     install_requires=["requests>=2.2.1", "simplejson>=3.4.0", "six>=1.8.0"],
-    packages=find_packages(),
+    packages=find_packages(exclude=['tests']),
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",

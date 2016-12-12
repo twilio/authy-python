@@ -248,3 +248,45 @@ class Phones(Resource):
         }
         resp = self.get("/protected/json/phones/info", options)
         return Phone(self, resp)
+
+
+class OneTouchApprovalRequest(Instance):
+
+    @property
+    def status(self):
+        try:
+            return self.content['approval_request']['status']
+        except KeyError:
+            pass
+
+
+class OneTouchRequests(Resource):
+
+    def initiate_approval_request(self,
+                                  user_id,
+                                  message,
+                                  seconds_to_expire=None,
+                                  details=None,
+                                  hidden_details=None,
+                                  logos=None):
+
+        options = {'message': message}
+        if seconds_to_expire:
+            options['seconds_to_expire'] = seconds_to_expire
+        if details:
+            options['details'] = details
+        if hidden_details:
+            options['hidden_details'] = hidden_details
+        if logos:
+            options['logos'] = logos
+
+        resp = self.post('/onetouch/json/users/{0}/approval_requests'.format(user_id), options)
+        return OneTouchApprovalRequest(self, resp)
+
+    def approval_request_status(self, uuid):
+
+        resp = self.get('/onetouch/json/approval_requests/{0}'.format(uuid))
+        return OneTouchApprovalRequest(self, resp)
+
+
+# EOF
