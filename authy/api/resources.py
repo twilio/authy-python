@@ -248,3 +248,38 @@ class Phones(Resource):
         }
         resp = self.get("/protected/json/phones/info", options)
         return Phone(self, resp)
+    
+class oneTouchResponse(Instance):
+    def __init__(self, resource, response):
+        self.status_code = None;
+        super(oneTouchResponse, self).__init__(resource, response)
+        if (isinstance(self.content, dict) and 'approval_request' in self.content):
+            self.uuid = self.content['approval_request']['uuid']
+        else:
+            self.uuid = None
+
+    def getUuid(self):
+        return self.uuid
+
+
+class oneTouch(Resource):
+    def send_request(self, user_id, data={}):
+        """
+        :param user_id:
+        :param data:
+        :return oneTouch Json Object:
+        """
+        request_url = "/onetouch/json/users/{0}/approval_requests".format(user_id)
+        response = self.post(request_url, data)
+        return oneTouchResponse(self, response)
+
+    def get_approval_status(self, uuid):
+        """
+        :param uuid:
+        :return Json Object:
+        """
+        request_url = "/onetouch/json/approval_requests/{0}".format(uuid)
+        response = self.get(request_url)
+        return (response.json())
+
+
