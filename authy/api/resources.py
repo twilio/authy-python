@@ -2,22 +2,6 @@ import requests
 import platform
 import six
 
-# * ApiClient
-
-#  Python 2.7/3.4
-#
-#  :category Services
-#  :package  Authy
-#  :author   David Cuadrado <david@authy.com>
-#  :license  http://creativecommons.org/licenses/MIT/ MIT
-#  :link     https://github.com/authy/authy-python
-
-# Authy API interface.
-# :category Services
-# :package  Authy
-# :author   David Cuadrado < david @ authy.com >
-# :license  http: // creativecommons.org / licenses / MIT / MIT
-# :link     https://github.com/authy/authy-python
 
 from authy import __version__, AuthyFormatException
 try:
@@ -374,7 +358,7 @@ class oneTouchResponse(Instance):
 
 
 class oneTouch(Resource):
-    def send_request(self, user_id, message,seconds_to_expire=120,details={},hidden_details={}, logos={}):
+    def send_request(self, user_id, message,seconds_to_expire=None,details={},hidden_details={}, logos={}):
         """
         OneTouch verification request. Sends a request for Auth App. For more info https://www.twilio.com/docs/api/authy/authy-onetouch-api
         :param string user_id: user_id User's authy id stored in your database
