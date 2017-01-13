@@ -2,6 +2,23 @@ import requests
 import platform
 import six
 
+# * ApiClient
+
+#  Python 2.7/3.4
+#
+#  :category Services
+#  :package  Authy
+#  :author   David Cuadrado <david@authy.com>
+#  :license  http://creativecommons.org/licenses/MIT/ MIT
+#  :link     https://github.com/authy/authy-python
+
+# Authy API interface.
+# :category Services
+# :package  Authy
+# :author   David Cuadrado < david @ authy.com >
+# :license  http: // creativecommons.org / licenses / MIT / MIT
+# :link     https://github.com/authy/authy-python
+
 from authy import __version__, AuthyFormatException
 try:
     from urllib import quote
@@ -19,25 +36,64 @@ except ImportError:
 
 
 class Resource(object):
-
+    """
+    Request CRUD defined in Resouce.
+    """
     def __init__(self, api_uri, api_key):
+        """
+        Class constructor
+        :param string api_uri:
+        :param string api_key:
+        """
         self.api_uri = api_uri
         self.api_key = api_key
         self.def_headers = self.__default_headers()
 
     def post(self, path, data={}):
+        """
+        initiate create request to client server.
+        :param string path:
+        :param dict data Receives from child class:
+        :return json response:
+        """
         return self.request("POST", path, data, {'Content-Type': 'application/json'})
 
     def get(self, path, data={}):
+        """
+        initiate get request to client server.
+        :param string path:
+        :param dict data:
+        :return Json response:
+        """
         return self.request("GET", path, data)
 
     def put(self, path, data={}):
+        """
+        initiate update request.
+        :param string path:
+        :param dict data:
+        :return:
+        """
         return self.request("PUT", path, data, {'Content-Type': 'application/json'})
 
     def delete(self, path, data={}):
+        """
+        initiate recored delete request.
+        :param string path:
+        :param dict data:
+        :return:
+        """
         return self.request("DELETE", path, data)
 
     def request(self, method, path, data={}, headers={}):
+        """
+
+        :param callback method:
+        :param string path:
+        :param dict data:
+        :param headers:
+        :return:
+        """
         url = self.api_uri + path
         params = {}
         temp = headers.copy()
@@ -75,8 +131,15 @@ class Resource(object):
 
 
 class Instance(object):
-
+    """
+    Response parsing from resource request api calls
+    """
     def __init__(self, resource, response):
+        """
+        Class constructor.
+        :param class instance resource:
+        :param class instance response:
+                """
         self.resource = resource
         self.response = response
 
@@ -86,9 +149,16 @@ class Instance(object):
             self.content = self.response.text
 
     def ok(self):
+        """
+
+        :return Response code(200) if success:
+        """
         return self.response.status_code == 200
 
     def errors(self):
+        """
+        :return error dict if no success:
+        """
         if self.ok():
             return {}
 
@@ -106,7 +176,9 @@ class Instance(object):
 
 
 class Sms(Instance):
-
+    """
+    sms response handler
+    """
     def ignored(self):
         try:
             self.content['ignored']
@@ -116,8 +188,15 @@ class Sms(Instance):
 
 
 class User(Instance):
-
+    """
+    users class response handler.
+    """
     def __init__(self, resource, response):
+        """
+        user constructor. assigns id if exist.
+        :param resource class instance:
+        :param response class instance:
+        """
         super(User, self).__init__(resource, response)
         if(isinstance(self.content, dict) and 'user' in self.content):
             self.id = self.content['user']['id']
@@ -126,8 +205,17 @@ class User(Instance):
 
 
 class Users(Resource):
-
+    """
+    create, check status or delete user through this users datatype
+    """
     def create(self, email, phone, country_code=1):
+        """
+        sends request to create new user.
+        :param string email:
+        :param string phone:
+        :param string country_code:
+        :return:
+        """
         data = {
             "user": {
                 "email": email,
@@ -220,6 +308,14 @@ class Phone(Instance):
 class Phones(Resource):
 
     def verification_start(self, phone_number, country_code, via='sms', locale=None):
+        """
+
+        :param string phone_number stored in your databse or you provided while creating new user.:
+        :param string country_code stored in your databse or you provided while creating new user.:
+        :param string via verification method either sms or call:
+        :param string locale optional default none:
+        :return:
+        """
         options = {
             'phone_number': phone_number,
             'country_code': country_code,
@@ -233,6 +329,13 @@ class Phones(Resource):
         return Phone(self, resp)
 
     def verification_check(self, phone_number, country_code, verification_code):
+        """
+
+        :param phone_number:
+        :param country_code:
+        :param verification_code:
+        :return:
+        """
         options = {
             'phone_number': phone_number,
             'country_code': country_code,
@@ -250,7 +353,15 @@ class Phones(Resource):
         return Phone(self, resp)
     
 class oneTouchResponse(Instance):
+    """
+    oneTouch response handler.
+    """
     def __init__(self, resource, response):
+        """
+        oneTouchResponse constructor. receives two prams
+        :param resource instance:
+        :param response of oneTouch datatype:
+        """
         self.status_code = None;
         super(oneTouchResponse, self).__init__(resource, response)
         if (isinstance(self.content, dict) and 'approval_request' in self.content):
@@ -263,23 +374,47 @@ class oneTouchResponse(Instance):
 
 
 class oneTouch(Resource):
-    def send_request(self, user_id, data={}):
+    def send_request(self, user_id, message,seconds_to_expire=120,details={},hidden_details={}, logos={}):
         """
-        :param user_id:
-        :param data:
-        :return oneTouch Json Object:
+        OneTouch verification request. Sends a request for Auth App. For more info https://www.twilio.com/docs/api/authy/authy-onetouch-api
+        :param string user_id: user_id User's authy id stored in your database
+        :param string message: Required, the message shown to the user when the approval request arrives.
+        :param number seconds_to_expire: Optional, defaults to 120 (two minutes).
+        :param dict details:  For example details['Requested by'] = 'MacBook Pro, Chrome'; it will be displayed on Authy app
+        :param dict hidden_details: Same usage as detail except this detail is not shown in Authy app
+        :param dict logos: Contains the logos that will be shown to user. The logos parameter is expected to be an array of objects, each object with two fields: res (values are default,low,med,high) and url
+        :return oneTouchResponse: the server response Json Object
         """
+        encode_logos = []
+        if len(logos):
+            for logo in logos:
+                l = {
+                    'res': quote(logo.get('res', '')),
+                    'url': quote(logo.get('url', ''))
+                }
+                encode_logos.append(l)
+
+        data = {
+            "message": message,
+            "seconds_to_expire": seconds_to_expire,
+            "details": details,
+            'hidden_details': hidden_details,
+            'logos': encode_logos
+
+        }
         request_url = "/onetouch/json/users/{0}/approval_requests".format(user_id)
         response = self.post(request_url, data)
         return oneTouchResponse(self, response)
 
     def get_approval_status(self, uuid):
         """
-        :param uuid:
-        :return Json Object:
+        OneTouch verification request. Sends a request for Auth App. For more info https://www.twilio.com/docs/api/authy/authy-onetouch-api
+        :param string uuid Required. The approval request ID. (Obtained from the response to an ApprovalRequest):
+        :return oneTouchResponse the server response Json Object:
         """
         request_url = "/onetouch/json/approval_requests/{0}".format(uuid)
         response = self.get(request_url)
         return (response.json())
+
 
 
