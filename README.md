@@ -179,6 +179,56 @@ If you want to gather additional information about user phone, use phones info.
 ```python
 authy_api.phones.info(phone_number, country_code)
 ```
+## OneToch API
+Authy OneTouch uses a very simple API consisting of two endpoints. One for creating approval requests and another to check the status of the approval request. To simplify the process of handling a request, you can set a callback URL in the Authy dashboard. 
+
+### Send Approval Request
+To generate a OneTouch approval request which user can accept or reject on Authy App
+
+    details ={}
+    details['username']='example@example.com'
+    details['location']='California, USA'
+    details['Account Number']='987654'
+    
+    logos= {}
+    logos[][res]='default'
+    logos[][url]='https://example.com/logos/default.png'
+    logos[][res]='low'
+    logos[][url]='https://example.com/logos/low.png'
+    
+    hidden_details = {}
+    hidden_details['ip_address'] = '110.37.200.52'
+        
+    user_id= "654321"
+    message= "Login requested for a CapTrade Bank account.",
+    seconds_to_expire= 120,
+    
+    response = authy_api.oneTouch.send_request(user_id, message, details, logos, hidden_details )
+    
+    // Get OneTouch approval request UUID to check if user accepted or rejected later
+    uuid = response.getUuid()
+    print(uuid)
+    
+### Check OneTouch UUID status
+If you wan to check status (accepted/rejected) of OneTouch approval request UUID
+
+    status_response = authy_api.oneTouch.get_approval_status(uuid)
+    print(status_response)
+
+### OneTouch Callback implementation
+Use the following example to set callback handler
+
+    signature = 'rmZ32BQ5tjVOCBq8+r7pFRY8FTsjRlJtl3F44+LjoiY='
+    apikey = 'M8kcn4b2sgjtLE9PNejxmaub1R0WYL1t'
+    nonce = '123456'
+    params = Request headers and body params as dict sent by Authy.
+    url = 'https://www.google.com/auth/'
+    method = 'POST'
+    isValid = validateOneTouchSignature(signature=signature, nonce=nonce, method=method, url=url, params=params, apiKey=apikey)
+    if isValid:
+        // A valid request by Authy.
+    else:
+        // Not a valid request by Authy, probably you want to ignore it
 
 ## More…
 
