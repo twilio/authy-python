@@ -1,7 +1,7 @@
 import requests
 import platform
 import six
-
+import hashlib, hmac, base64
 
 from authy import __version__, AuthyFormatException
 try:
@@ -400,5 +400,63 @@ class oneTouch(Resource):
         response = self.get(request_url)
         return (response.json())
 
+    def validateOneTouchSignature(self, signature, nonce, method, url, params, apiKey):
+        """
+        Function to validate signature in X-Authy-Signature key of headers.
+
+        :param string signature: X-Authy-Signature key of headers.
+        :param string nonce: X-Authy-Signature-Nonce key of headers.
+        :param string method: GET or POST - configured in app settings for OneTouch.
+        :param string url: base callback url.
+        :param dict params: params sent by Authy.
+        :param string apiKey: Authy API Key.
+        :return bool: True if calculated signature and X-Authy-Signature are identical else False.
+        """
+
+        query_params = self.__make_http_query(params)
+
+        # Sort and replace encoded  params in case-sensitive order
+        sorted_params = '&'.join(sorted(query_params.replace('/', '%2F').replace('%20', '+').split('&')))
+        data = nonce + "|" + method + "|" + url + "|" + sorted_params
+        try:
+            calculated_signature = base64.b64encode(hmac.new(apiKey.encode(), data.encode(), hashlib.sha256).digest())
+            return calculated_signature.decode() == signature
+        except:
+            calculated_signature = base64.b64encode(hmac.new(apiKey, data, hashlib.sha256).digest())
+            return calculated_signature == signature
+
+    def __make_http_query(params, topkey=''):
+        """
+        Function to covert params into url encoded query string
+        :param dict params: Json string sent  by Authy.
+        :param string topkey: params key
+        :return string: url encoded Query.
+        """
+        if len(params) == 0:
+            return ""
+        result = ""
+        # is a dictionary?
+        if type(params) is dict:
+            for key in params.keys():
+                newkey = quote(key)
+                if topkey != '':
+                    newkey = topkey + quote('[' + key + ']')
+                if type(params[key]) is dict:
+                    result += self.__make_http_query(params[key], newkey)
+                elif type(params[key]) is list:
+                    i = 0
+                    for val in params[key]:
+                        result += newkey + quote('[' + str(i) + ']') + "=" + quote(str(val)) + "&"
+                        i = i + 1
+                # boolean should have special treatment as well
+                elif type(params[key]) is bool:
+                    result += newkey + "=" + quote(str(params[key]).lower()) + "&"
+                # assume string (integers and floats work well)
+                else:
+                    result += newkey + "=" + quote(str(params[key])) + "&"
+        # remove the last '&'
+        if (result) and (topkey == '') and (result[-1] == '&'):
+            result = result[:-1]
+        return result
 
 
