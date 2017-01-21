@@ -219,12 +219,11 @@ If you wan to check status (accepted/rejected) of OneTouch approval request UUID
 Use the following example to set callback handler
 
     signature = 'rmZ32BQ5tjVOCBq8+r7pFRY8FTsjRlJtl3F44+LjoiY='
-    apikey = 'M8kcn4b2sgjtLE9PNejxmaub1R0WYL1t'
     nonce = '123456'
     params = Request headers and body params as dict sent by Authy.
     url = 'https://www.google.com/auth/'
     method = 'POST'
-    isValid = validateOneTouchSignature(signature=signature, nonce=nonce, method=method, url=url, params=params, apiKey=apikey)
+    isValid = validateOneTouchSignature(signature=signature, nonce=nonce, method=method, url=url, params=params)
     if isValid:
         // A valid request by Authy.
     else:

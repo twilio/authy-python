@@ -400,7 +400,7 @@ class oneTouch(Resource):
         response = self.get(request_url)
         return (response.json())
 
-    def validateOneTouchSignature(self, signature, nonce, method, url, params, apiKey):
+    def validateOneTouchSignature(self, signature, nonce, method, url, params):
         """
         Function to validate signature in X-Authy-Signature key of headers.
 
@@ -409,7 +409,6 @@ class oneTouch(Resource):
         :param string method: GET or POST - configured in app settings for OneTouch.
         :param string url: base callback url.
         :param dict params: params sent by Authy.
-        :param string apiKey: Authy API Key.
         :return bool: True if calculated signature and X-Authy-Signature are identical else False.
         """
 
@@ -419,13 +418,13 @@ class oneTouch(Resource):
         sorted_params = '&'.join(sorted(query_params.replace('/', '%2F').replace('%20', '+').split('&')))
         data = nonce + "|" + method + "|" + url + "|" + sorted_params
         try:
-            calculated_signature = base64.b64encode(hmac.new(apiKey.encode(), data.encode(), hashlib.sha256).digest())
+            calculated_signature = base64.b64encode(hmac.new(self.api_key.encode(), data.encode(), hashlib.sha256).digest())
             return calculated_signature.decode() == signature
         except:
-            calculated_signature = base64.b64encode(hmac.new(apiKey, data, hashlib.sha256).digest())
+            calculated_signature = base64.b64encode(hmac.new(self.api_key, data, hashlib.sha256).digest())
             return calculated_signature == signature
 
-    def __make_http_query(params, topkey=''):
+    def __make_http_query(self, params, topkey=''):
         """
         Function to covert params into url encoded query string
         :param dict params: Json string sent  by Authy.
