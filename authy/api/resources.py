@@ -135,7 +135,7 @@ class Instance(object):
     def ok(self):
         """
 
-        :return Response code(200) if success:
+        :return Response True if success:
         """
         return self.response.status_code == 200
 
@@ -346,15 +346,21 @@ class oneTouchResponse(Instance):
         :param resource instance:
         :param response of oneTouch datatype:
         """
-        self.status_code = None;
+        self.uuid = None
         super(oneTouchResponse, self).__init__(resource, response)
         if (isinstance(self.content, dict) and 'approval_request' in self.content):
             self.uuid = self.content['approval_request']['uuid']
-        else:
-            self.uuid = None
 
-    def getUuid(self):
+    def get_uuid(self):
         return self.uuid
+
+    def status(self):
+        success = False
+        if (not isinstance(self.content, dict)):
+            success = self.content
+        elif ('success' in self.content):
+            success = self.content['success']
+        return success
 
 
 class oneTouch(Resource):
@@ -369,14 +375,14 @@ class oneTouch(Resource):
         :param dict logos: Contains the logos that will be shown to user. The logos parameter is expected to be an array of objects, each object with two fields: res (values are default,low,med,high) and url
         :return oneTouchResponse: the server response Json Object
         """
-        encode_logos = []
+        encode_logos = {}
         if len(logos):
             for logo in logos:
                 l = {
                     'res': quote(logo.get('res', '')),
                     'url': quote(logo.get('url', ''))
                 }
-                encode_logos.append(l)
+                encode_logos.update(l)
 
         data = {
             "message": message,
@@ -398,7 +404,7 @@ class oneTouch(Resource):
         """
         request_url = "/onetouch/json/approval_requests/{0}".format(uuid)
         response = self.get(request_url)
-        return (response.json())
+        return oneTouchResponse(self,response)
 
     def validateOneTouchSignature(self, signature, nonce, method, url, params):
         """

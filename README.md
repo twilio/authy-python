@@ -203,31 +203,40 @@ To generate a OneTouch approval request which user can accept or reject on Authy
     message= "Login requested for a CapTrade Bank account.",
     seconds_to_expire= 120,
     
-    response = authy_api.oneTouch.send_request(user_id, message, details, logos, hidden_details )
-    
-    // Get OneTouch approval request UUID to check if user accepted or rejected later
-    uuid = response.getUuid()
-    print(uuid)
+    response = authy_api.oneTouch.send_request(user_id, message,seconds_to_expire, details, hidden_details,logos)
+    if response.ok():
+        # do your stuff.
+        UUID = response.get_uuid()
+    else:
+        # do your stuff.
+       
     
 ### Check OneTouch UUID status
-If you wan to check status (accepted/rejected) of OneTouch approval request UUID
+If you want to check status (accepted/rejected) of OneTouch approval request UUID
 
-    status_response = authy_api.oneTouch.get_approval_status(uuid)
-    print(status_response)
+    approval_status = authy_api.oneTouch.get_approval_status(UUID)
+    if status_response.ok():
+        # do your stuff.
+        status = approval_status.status()
+    else:
+        # do your stuff, may be you want to ignore this.
 
 ### OneTouch Callback implementation
-Use the following example to set callback handler
-
-    signature = 'rmZ32BQ5tjVOCBq8+r7pFRY8FTsjRlJtl3F44+LjoiY='
-    nonce = '123456'
-    params = Request headers and body params as dict sent by Authy.
-    url = 'https://www.google.com/auth/'
-    method = 'POST'
-    isValid = validateOneTouchSignature(signature=signature, nonce=nonce, method=method, url=url, params=params)
-    if isValid:
-        // A valid request by Authy.
+Here is an example of Django 1.10.5 implementation
+    
+    from authy.api import AuthyApiClient
+    authy_api = AuthyApiClient(APIKEY)
+    NONCE = request.META["HTTP_X_AUTHY_SIGNATURE_NONCE"]
+    AUTHY_SIGNATURE = request.META["HTTP_X_AUTHY_SIGNATURE"]
+    REQUEST_METHOD = request.META["REQUEST_METHOD"]
+    URL = request.META["HTTP_X_FORWARDED_FOR"] + '://' + request.META["HTTP_HOST"] + request.path
+    params = request.body.decode('utf-8')
+    params = json.loads(params)
+    isValidate = authy_api.oneTouch.validateOneTouchSignature(AUTHY_SIGNATURE, NONCE, REQUEST_METHOD, URL, params)
+    if isValidate:
+        # do your stuff.
     else:
-        // Not a valid request by Authy, probably you want to ignore it
+        # do your stuff.
 
 ## More…
 
