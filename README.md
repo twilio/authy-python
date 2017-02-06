@@ -190,12 +190,8 @@ To generate a OneTouch approval request which user can accept or reject on Authy
     details['location']='California, USA'
     details['Account Number']='987654'
     
-    logos= {}
-    logos[][res]='default'
-    logos[][url]='https://example.com/logos/default.png'
-    logos[][res]='low'
-    logos[][url]='https://example.com/logos/low.png'
-    
+    logos= [dict(res = 'default', url = 'https://example.com/logos/default.png'), dict(res = 'low', url = 'https://example.com/logos/default.png')]
+        
     hidden_details = {}
     hidden_details['ip_address'] = '110.37.200.52'
         
