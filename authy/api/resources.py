@@ -192,12 +192,13 @@ class Users(Resource):
     """
     create, check status or delete user through this users datatype
     """
-    def create(self, email, phone, country_code=1):
+    def create(self, email, phone, country_code=1, send_install_link_via_sms=False):
         """
         sends request to create new user.
         :param string email:
         :param string phone:
         :param string country_code:
+        :param bool send_install_link_via_sms:
         :return:
         """
         data = {
@@ -205,7 +206,9 @@ class Users(Resource):
                 "email": email,
                 "cellphone": phone,
                 "country_code": country_code
-            }
+            },
+
+            'send_install_link_via_sms': send_install_link_via_sms
         }
 
         resp = self.post("/protected/json/users/new", data)
@@ -294,12 +297,14 @@ class Phones(Resource):
     def verification_start(self, phone_number, country_code, via='sms', locale=None):
         """
 
-        :param string phone_number stored in your databse or you provided while creating new user.:
-        :param string country_code stored in your databse or you provided while creating new user.:
-        :param string via verification method either sms or call:
-        :param string locale optional default none:
+        :param string phone_number: stored in your databse or you provided while creating new user.
+        :param string country_code: stored in your databse or you provided while creating new user.
+        :param string via: verification method either sms or call
+        :param string locale: optional default none
         :return:
         """
+        if via != 'sms' or via != 'call':
+            raise AuthyFormatException("Invalid Via. Expected 'sms' or 'call'.")
         options = {
             'phone_number': phone_number,
             'country_code': country_code,
@@ -375,26 +380,49 @@ class oneTouch(Resource):
         :param dict logos: Contains the logos that will be shown to user. The logos parameter is expected to be an array of objects, each object with two fields: res (values are default,low,med,high) and url
         :return oneTouchResponse: the server response Json Object
         """
-        encode_logos = {}
+        if not message:
+            raise AuthyFormatException("Invalid Message. Expected Message with valid length.")
+        message = message[:200]
+        encode_logos = []
+        oneTouch.clean_logos(logos)
         if len(logos):
+            temp_array = {}
+            clean_logos = []
             for logo in logos:
-                l = {
-                    'res': quote(logo.get('res', '')),
-                    'url': quote(logo.get('url', ''))
-                }
-                encode_logos.update(l)
+                for l in logo:
+                    # We ignore any additional parameter on the logos, and truncate
+                    # string size to the maximum allowed.
+                    if l == 'res':
+                        temp_array['res'] = logo[l][:200]
+                    if l == 'url':
+                        temp_array['url'] = logo[l][:200]
+
+                clean_logos.append(temp_array)
+                temp_array = {}
 
         data = {
             "message": message,
             "seconds_to_expire": seconds_to_expire,
             "details": details,
             'hidden_details': hidden_details,
-            'logos': encode_logos
+            'logos': clean_logos
 
         }
         request_url = "/onetouch/json/users/{0}/approval_requests".format(user_id)
         response = self.post(request_url, data)
         return oneTouchResponse(self, response)
+
+    @staticmethod
+    def clean_logos(logos):
+        """
+        Validate logos.
+        :param dict logos:
+        :return:
+        """
+        if not len(logos):
+            return True # Allow nil hash
+        if not isinstance(logos, list):
+            raise AuthyFormatException("Array expected. Got #{0}".format(type(logos)))
 
     def get_approval_status(self, uuid):
         """
