@@ -85,7 +85,7 @@ class oneTouchTest(unittest.TestCase):
 
     def test_send_request_with_balnk_details(self):
         user_id = test_helper.AUTH_ID_A
-        message = 'Some test message' 
+        message = 'Some test message'
         seconds_to_expire = 120
 
         details = {}
