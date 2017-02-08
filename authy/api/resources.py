@@ -6,7 +6,7 @@ import hashlib, hmac, base64
 from authy import __version__, AuthyFormatException
 from unittest.mock import MagicMock
 
-class FakeResponse:
+class AuthyResponse:
 
     def __init__(self, message, status_code=400):
         self.mock = MagicMock(status_code=status_code, message=message, error_code='689012',
@@ -300,7 +300,7 @@ class Phones(Resource):
         :return:
         """
         if via != 'sms' or via != 'call':
-            mock = FakeResponse(message="Invalid Via. Expected 'sms' or 'call'.")
+            mock = AuthyResponse(message="Invalid Via. Expected 'sms' or 'call'.")
             return oneTouchResponse(self, mock.mock)
 
         options = {
@@ -384,23 +384,23 @@ class oneTouch(Resource):
         """
 
         if not user_id:
-            mock = FakeResponse(message='user_id is missing')
+            mock = AuthyResponse(message='user_id is missing')
             return oneTouchResponse(self, mock.mock)
 
         if not message:
-            mock = FakeResponse(message='Message is missing.')
+            mock = AuthyResponse(message='Message is missing.')
             return oneTouchResponse(self, mock.mock)
         message = message[:200]
 
         if not details:
-            mock = FakeResponse(message="Sender's account details are missing.")
+            mock = AuthyResponse(message="Sender's account details are missing.")
             return oneTouchResponse(self, mock.mock)
         if not hidden_details:
-            mock = FakeResponse(message="Hidden details can't blank.")
+            mock = AuthyResponse(message="Hidden details can't blank.")
             return oneTouchResponse(self, mock.mock)
         is_clean = self.clean_logos(logos)
         if not is_clean:
-            mock = FakeResponse(message="Array expected. Got #{0}".format(type(logos)))
+            mock = AuthyResponse(message="Array expected. Got #{0}".format(type(logos)))
             return oneTouchResponse(self, mock.mock)
 
         encode_logos = []
@@ -416,7 +416,7 @@ class oneTouch(Resource):
                     elif l == 'url':
                         temp_array['url'] = logo[l][:200]
                     else:
-                        mock = FakeResponse(message="Invalid logos dict keys. Expected 'res' or 'url'")
+                        mock = AuthyResponse(message="Invalid logos dict keys. Expected 'res' or 'url'")
                         return oneTouchResponse(self, mock.mock)
 
 
@@ -471,19 +471,19 @@ class oneTouch(Resource):
         :return bool: True if calculated signature and X-Authy-Signature are identical else False.
         """
         if not signature:
-            mock = FakeResponse(message="'SIGNATURE' is missing.")
+            mock = AuthyResponse(message="'SIGNATURE' is missing.")
             return oneTouchResponse(self, mock.mock)
 
         if not nonce:
-            mock = FakeResponse(message="'NONCE' is missing.")
+            mock = AuthyResponse(message="'NONCE' is missing.")
             return oneTouchResponse(self, mock.mock)
 
         if not method:
-            mock = FakeResponse(message="'METHOD' is missing.")
+            mock = AuthyResponse(message="'METHOD' is missing.")
             return oneTouchResponse(self, mock.mock)
 
         if not params:
-            mock = FakeResponse(message="'PARAMS' are missing.")
+            mock = AuthyResponse(message="'PARAMS' are missing.")
             return oneTouchResponse(self, mock.mock)
 
 
