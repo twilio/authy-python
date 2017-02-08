@@ -17,44 +17,155 @@ class oneTouchTest(unittest.TestCase):
         self.resource = oneTouch(test_helper.LIVE_API_URL, test_helper.LIVE_API_KEY)
 
     def test_send_request_with_valid_data(self):
-        details = {}
-        details['username'] = 'example@example.com'
-        details['location'] = 'California, USA'
-        details['Account Number'] = 'YOUR ACCOUNT NUMBER'
-        logos= {}
-        hidden_details = {}
-        hidden_details['ip_address'] = '110.37.200.52'
-
-        user_id = "YOUR USER ID"
+        user_id = test_helper.AUTH_ID_A
         message = "Login requested for a CapTrade Bank account."
         seconds_to_expire = 120
 
-        onetouch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
-        self.assertIsInstance(onetouch, oneTouchResponse)
-        self.assertTrue(onetouch.ok())
-        self.assertEqual(onetouch.errors(), {})
-        self.assertNotEqual(onetouch.get_uuid(), None, 'some error in sent_rquest.')
-        self.assertNotEqual(self.resource.get_approval_status(onetouch.get_uuid()).status(), False, 'Some error in request.')
-
-    def test_send_request_with_in_valid_data(self):
         details = {}
         details['username'] = 'example@example.com'
         details['location'] = 'California, USA'
-        details['Account Number'] = ''
-        logos= {}
+        details['Account Number'] = test_helper.AUTH_ID_B
+
         hidden_details = {}
         hidden_details['ip_address'] = '110.37.200.52'
 
-        user_id = ""
+        logos = [dict(res='default', url='https://www.python.org/static/img/python-logo.png'), dict(res='low', url='https://www.python.org/static/img/python-logo.png')]
+
+
+        touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
+        self.assertIsInstance(touch, oneTouchResponse)
+        self.assertTrue(touch.ok())
+        self.assertEqual(touch.errors(), {})
+        self.assertIsNotNone(touch.get_uuid())
+        self.assertNotEqual(self.resource.get_approval_status(touch.get_uuid()).status(), False)
+
+    def test_send_request_with_balnk_userId(self):
+        user_id = ''
         message = "Login requested for a CapTrade Bank account."
         seconds_to_expire = 120
 
-        onetouch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
-        self.assertIsInstance(onetouch, oneTouchResponse)
-        self.assertNotEqual(onetouch.ok(), True)
-        self.assertNotEqual(onetouch.errors(), {})
-        self.assertEqual(onetouch.get_uuid(), None)
-        self.assertEqual(self.resource.get_approval_status(onetouch.get_uuid()).status(), False)
+        details = {}
+        details['username'] = 'example@example.com'
+        details['location'] = 'California, USA'
+        details['Account Number'] = test_helper.AUTH_ID_B
+
+        hidden_details = {}
+        hidden_details['ip_address'] = '110.37.200.52'
+
+        logos = [dict(res='default', url='https://www.python.org/static/img/python-logo.png'),
+                 dict(res='low', url='https://www.python.org/static/img/python-logo.png')]
+
+        touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
+        self.assertIsInstance(touch, oneTouchResponse)
+        self.assertEqual(touch.ok(), False)
+        self.assertEqual(touch.errors(), {'error': '{"message": "user_id is missing"}'})
+        self.assertEqual(touch.get_uuid(), False)
+
+    def test_send_request_with_balnk_message(self):
+        user_id = test_helper.AUTH_ID_A
+        message = ''
+        seconds_to_expire = 120
+
+        details = {}
+        details['username'] = 'example@example.com'
+        details['location'] = 'California, USA'
+        details['Account Number'] = test_helper.AUTH_ID_B
+
+        hidden_details = {}
+        hidden_details['ip_address'] = '110.37.200.52'
+
+        logos = [dict(res='default', url='https://www.python.org/static/img/python-logo.png'),
+                 dict(res='low', url='https://www.python.org/static/img/python-logo.png')]
+
+        touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
+        self.assertIsInstance(touch, oneTouchResponse)
+        self.assertEqual(touch.ok(), False)
+        self.assertEqual(touch.errors(), {'error': '{"message": "Message is missing."}'})
+        self.assertEqual(touch.get_uuid(), False)
+
+    def test_send_request_with_balnk_details(self):
+        user_id = test_helper.AUTH_ID_A
+        message = 'Some test message' 
+        seconds_to_expire = 120
+
+        details = {}
+
+        hidden_details = {}
+        hidden_details['ip_address'] = '110.37.200.52'
+
+        logos = [dict(res='default', url='https://www.python.org/static/img/python-logo.png'),
+                 dict(res='low', url='https://www.python.org/static/img/python-logo.png')]
+
+        touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
+        self.assertIsInstance(touch, oneTouchResponse)
+        self.assertEqual(touch.ok(), False)
+        self.assertEqual(touch.errors(), {'error': '{"message": "Sender\'s account details are missing."}'})
+        self.assertEqual(touch.get_uuid(), False)
+
+    def test_send_request_with_inValid_logoKey(self):
+        user_id = test_helper.AUTH_ID_A
+        message = 'Test Message'
+        seconds_to_expire = 120
+
+        details = {}
+        details['username'] = 'example@example.com'
+        details['location'] = 'California, USA'
+        details['Account Number'] = test_helper.AUTH_ID_B
+
+        hidden_details = {}
+        hidden_details['ip_address'] = '110.37.200.52'
+
+        logos = [dict(wrong='default', url='https://www.python.org/static/img/python-logo.png'),
+                 dict(res='low', url='https://www.python.org/static/img/python-logo.png')]
+
+        touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
+        self.assertIsInstance(touch, oneTouchResponse)
+        self.assertEqual(touch.ok(), False)
+        self.assertEqual(touch.errors(), {'error': '{"message": "Invalid logos dict keys. Expected \'res\' or \'url\'"}'})
+        self.assertEqual(touch.get_uuid(), False)
+
+    def test_send_request_with_inValid_logo_dataType(self):
+        user_id = test_helper.AUTH_ID_A
+        message = 'Test Message'
+        seconds_to_expire = 120
+
+        details = {}
+        details['username'] = 'example@example.com'
+        details['location'] = 'California, USA'
+        details['Account Number'] = test_helper.AUTH_ID_B
+
+        hidden_details = {}
+        hidden_details['ip_address'] = '110.37.200.52'
+
+        logos = dict(res='default', url='https://www.python.org/static/img/python-logo.png')
+
+
+        touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
+        self.assertIsInstance(touch, oneTouchResponse)
+        self.assertEqual(touch.ok(), False)
+        self.assertNotEqual(touch.errors(), {})
+        self.assertEqual(touch.get_uuid(), False)
+
+    def test_send_request_with_blank_hidden_details(self):
+        user_id = test_helper.AUTH_ID_A
+        message = 'Test Message'
+        seconds_to_expire = 120
+
+        details = {}
+        details['username'] = 'example@example.com'
+        details['location'] = 'California, USA'
+        details['Account Number'] = test_helper.AUTH_ID_B
+
+        hidden_details = {}
+
+        logos = [dict(wrong='default', url='https://www.python.org/static/img/python-logo.png'),
+                 dict(res='low', url='https://www.python.org/static/img/python-logo.png')]
+
+        touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
+        self.assertIsInstance(touch, oneTouchResponse)
+        self.assertEqual(touch.ok(), False)
+        self.assertEqual(touch.errors(), {'error': '{"message": "Hidden details can\'t blank."}'})
+        self.assertEqual(touch.get_uuid(), False)
 
 if __name__ == "__main__":
 	    unittest.main()
