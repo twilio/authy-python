@@ -1,22 +1,16 @@
-import requests
+import requests, json
 import platform
 import six
 import hashlib, hmac, base64
 
 from authy import __version__, AuthyFormatException
-try:
-    from urllib import quote
-except ImportError:
-    from urllib.parse import quote
+from unittest.mock import MagicMock
 
-# import json
-try:
-    import json
-except ImportError:
-    try:
-        import simplejson as json
-    except ImportError:
-        from django.utils import simplejson as json
+class FakeResponse:
+
+    def __init__(self, message, status_code=400):
+        self.mock = MagicMock(status_code=status_code, message=message, error_code='689012',
+                  errors=json.dumps({'message': message}), success='False')
 
 
 class Resource(object):
@@ -126,11 +120,13 @@ class Instance(object):
                 """
         self.resource = resource
         self.response = response
-
-        try:
-            self.content = self.response.json()
-        except ValueError:
-            self.content = self.response.text
+        if not isinstance(self.response, MagicMock):
+            try:
+                self.content = self.response.json()
+            except ValueError:
+                self.content = self.response.text
+        else:
+            self.content = self.response.errors
 
     def ok(self):
         """
@@ -304,7 +300,9 @@ class Phones(Resource):
         :return:
         """
         if via != 'sms' or via != 'call':
-            raise AuthyFormatException("Invalid Via. Expected 'sms' or 'call'.")
+            mock = FakeResponse(message="Invalid Via. Expected 'sms' or 'call'.")
+            return oneTouchResponse(self, mock.mock)
+
         options = {
             'phone_number': phone_number,
             'country_code': country_code,
@@ -356,7 +354,10 @@ class oneTouchResponse(Instance):
         if (isinstance(self.content, dict) and 'approval_request' in self.content):
             self.uuid = self.content['approval_request']['uuid']
 
+
     def get_uuid(self):
+        if not self.uuid:
+            return False
         return self.uuid
 
     def status(self):
@@ -369,7 +370,8 @@ class oneTouchResponse(Instance):
 
 
 class oneTouch(Resource):
-    def send_request(self, user_id, message,seconds_to_expire=None,details={},hidden_details={}, logos={}):
+
+    def send_request(self, user_id, message,seconds_to_expire=None,details={},hidden_details={}, logos=[]):
         """
         OneTouch verification request. Sends a request for Auth App. For more info https://www.twilio.com/docs/api/authy/authy-onetouch-api
         :param string user_id: user_id User's authy id stored in your database
@@ -377,14 +379,31 @@ class oneTouch(Resource):
         :param number seconds_to_expire: Optional, defaults to 120 (two minutes).
         :param dict details:  For example details['Requested by'] = 'MacBook Pro, Chrome'; it will be displayed on Authy app
         :param dict hidden_details: Same usage as detail except this detail is not shown in Authy app
-        :param dict logos: Contains the logos that will be shown to user. The logos parameter is expected to be an array of objects, each object with two fields: res (values are default,low,med,high) and url
+        :param list logos: Contains the logos that will be shown to user. The logos parameter is expected to be an array of objects, each object with two fields: res (values are default,low,med,high) and url
         :return oneTouchResponse: the server response Json Object
         """
+
+        if not user_id:
+            mock = FakeResponse(message='user_id is missing')
+            return oneTouchResponse(self, mock.mock)
+
         if not message:
-            raise AuthyFormatException("Invalid Message. Expected Message with valid length.")
+            mock = FakeResponse(message='Message is missing.')
+            return oneTouchResponse(self, mock.mock)
         message = message[:200]
+
+        if not details:
+            mock = FakeResponse(message="Sender's account details are missing.")
+            return oneTouchResponse(self, mock.mock)
+        if not hidden_details:
+            mock = FakeResponse(message="Hidden details can't blank.")
+            return oneTouchResponse(self, mock.mock)
+        is_clean = self.clean_logos(logos)
+        if not is_clean:
+            mock = FakeResponse(message="Array expected. Got #{0}".format(type(logos)))
+            return oneTouchResponse(self, mock.mock)
+
         encode_logos = []
-        oneTouch.clean_logos(logos)
         if len(logos):
             temp_array = {}
             clean_logos = []
@@ -394,26 +413,31 @@ class oneTouch(Resource):
                     # string size to the maximum allowed.
                     if l == 'res':
                         temp_array['res'] = logo[l][:200]
-                    if l == 'url':
+                    elif l == 'url':
                         temp_array['url'] = logo[l][:200]
+                    else:
+                        mock = FakeResponse(message="Invalid logos dict keys. Expected 'res' or 'url'")
+                        return oneTouchResponse(self, mock.mock)
+
 
                 clean_logos.append(temp_array)
                 temp_array = {}
+            logos = clean_logos
 
         data = {
             "message": message,
             "seconds_to_expire": seconds_to_expire,
             "details": details,
             'hidden_details': hidden_details,
-            'logos': clean_logos
+            'logos': logos
 
         }
         request_url = "/onetouch/json/users/{0}/approval_requests".format(user_id)
         response = self.post(request_url, data)
         return oneTouchResponse(self, response)
 
-    @staticmethod
-    def clean_logos(logos):
+
+    def clean_logos(self, logos):
         """
         Validate logos.
         :param dict logos:
@@ -422,7 +446,8 @@ class oneTouch(Resource):
         if not len(logos):
             return True # Allow nil hash
         if not isinstance(logos, list):
-            raise AuthyFormatException("Array expected. Got #{0}".format(type(logos)))
+            return False
+        return True
 
     def get_approval_status(self, uuid):
         """
@@ -445,6 +470,22 @@ class oneTouch(Resource):
         :param dict params: params sent by Authy.
         :return bool: True if calculated signature and X-Authy-Signature are identical else False.
         """
+        if not signature:
+            mock = FakeResponse(message="'SIGNATURE' is missing.")
+            return oneTouchResponse(self, mock.mock)
+
+        if not nonce:
+            mock = FakeResponse(message="'NONCE' is missing.")
+            return oneTouchResponse(self, mock.mock)
+
+        if not method:
+            mock = FakeResponse(message="'METHOD' is missing.")
+            return oneTouchResponse(self, mock.mock)
+
+        if not params:
+            mock = FakeResponse(message="'PARAMS' are missing.")
+            return oneTouchResponse(self, mock.mock)
+
 
         query_params = self.__make_http_query(params)
 
