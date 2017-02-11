@@ -55,11 +55,10 @@ class oneTouchTest(unittest.TestCase):
         logos = [dict(res='default', url='https://www.python.org/static/img/python-logo.png'),
                  dict(res='low', url='https://www.python.org/static/img/python-logo.png')]
 
-        touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
-        self.assertIsInstance(touch, oneTouchResponse)
-        self.assertEqual(touch.ok(), False)
-        self.assertEqual(touch.errors(), {'error': '{"message": "user_id is missing"}'})
-        self.assertEqual(touch.get_uuid(), False)
+        try:
+            touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
+        except AuthyException as e:
+            self.assertEqual(str(e), "Invalid authy id, user id is requred and must be an integer value.")
 
     def test_send_request_with_balnk_message(self):
         user_id = test_helper.AUTH_ID_A
@@ -76,16 +75,14 @@ class oneTouchTest(unittest.TestCase):
 
         logos = [dict(res='default', url='https://www.python.org/static/img/python-logo.png'),
                  dict(res='low', url='https://www.python.org/static/img/python-logo.png')]
-
-        touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
-        self.assertIsInstance(touch, oneTouchResponse)
-        self.assertEqual(touch.ok(), False)
-        self.assertEqual(touch.errors(), {'error': '{"message": "Message is missing."}'})
-        self.assertEqual(touch.get_uuid(), False)
+        try:
+            touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
+        except AuthyException as e:
+            self.assertEqual(str(e), "Invalid message - should not be empty. It is required")
 
     def test_send_request_with_balnk_details(self):
         user_id = test_helper.AUTH_ID_A
-        message = 'Some test message'
+        message = 'Some test message' 
         seconds_to_expire = 120
 
         details = {}
@@ -96,11 +93,10 @@ class oneTouchTest(unittest.TestCase):
         logos = [dict(res='default', url='https://www.python.org/static/img/python-logo.png'),
                  dict(res='low', url='https://www.python.org/static/img/python-logo.png')]
 
-        touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
-        self.assertIsInstance(touch, oneTouchResponse)
-        self.assertEqual(touch.ok(), False)
-        self.assertEqual(touch.errors(), {'error': '{"message": "Sender\'s account details are missing."}'})
-        self.assertEqual(touch.get_uuid(), False)
+        try:
+            touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
+        except AuthyException as e:
+            self.assertEqual(str(e), "Invalid details - should not be empty. It is required")
 
     def test_send_request_with_inValid_logoKey(self):
         user_id = test_helper.AUTH_ID_A
@@ -118,11 +114,10 @@ class oneTouchTest(unittest.TestCase):
         logos = [dict(wrong='default', url='https://www.python.org/static/img/python-logo.png'),
                  dict(res='low', url='https://www.python.org/static/img/python-logo.png')]
 
-        touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
-        self.assertIsInstance(touch, oneTouchResponse)
-        self.assertEqual(touch.ok(), False)
-        self.assertEqual(touch.errors(), {'error': '{"message": "Invalid logos dict keys. Expected \'res\' or \'url\'"}'})
-        self.assertEqual(touch.get_uuid(), False)
+        try:
+            touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
+        except AuthyException as e:
+            self.assertEqual(str(e), "Invalid logos list. Only res and url required")
 
     def test_send_request_with_inValid_logo_dataType(self):
         user_id = test_helper.AUTH_ID_A
@@ -140,11 +135,10 @@ class oneTouchTest(unittest.TestCase):
         logos = dict(res='default', url='https://www.python.org/static/img/python-logo.png')
 
 
-        touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
-        self.assertIsInstance(touch, oneTouchResponse)
-        self.assertEqual(touch.ok(), False)
-        self.assertNotEqual(touch.errors(), {})
-        self.assertEqual(touch.get_uuid(), False)
+        try:
+            touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
+        except AuthyException as e:
+            self.assertEqual(str(e), "Invalid logos list. Only res and url required")
 
     def test_send_request_with_blank_hidden_details(self):
         user_id = test_helper.AUTH_ID_A
@@ -161,11 +155,46 @@ class oneTouchTest(unittest.TestCase):
         logos = [dict(wrong='default', url='https://www.python.org/static/img/python-logo.png'),
                  dict(res='low', url='https://www.python.org/static/img/python-logo.png')]
 
-        touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
-        self.assertIsInstance(touch, oneTouchResponse)
-        self.assertEqual(touch.ok(), False)
-        self.assertEqual(touch.errors(), {'error': '{"message": "Hidden details can\'t blank."}'})
-        self.assertEqual(touch.get_uuid(), False)
+        try:
+            touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
+        except AuthyException as e:
+            self.assertEqual(str(e), "Invalid hidden_details - should not be empty. It is required")
+
+    def test_ONETOUCH_CALLBACK_CHECK_WD_POST_MEHTHOD(self):
+
+        touch = self.resource.validate_oneTouch_signature(test_helper.METHOD_POST['SIGNATURE'],
+                                                          test_helper.METHOD_POST['NONCE'],
+                                                          test_helper.METHOD_POST['METHOD'],
+                                                          test_helper.METHOD_POST['URL'],
+                                                          test_helper.params)
+        self.assertIsInstance(touch, bool)
+        self.assertEqual(touch, True)
+
+    def test_ONETOUCH_CALLBACK_CHECK_WD_POST_MEHTHOD_INVAILED_NONCE(self):
+
+        touch = self.resource.validate_oneTouch_signature(test_helper.METHOD_POST['SIGNATURE'],
+                                                          'INVAILED NONCE',
+                                                          test_helper.METHOD_POST['METHOD'],
+                                                          test_helper.METHOD_POST['URL'],
+                                                          test_helper.params)
+        self.assertIsInstance(touch, bool)
+        self.assertEqual(touch, False)
+
+    def test_ONETOUCH_CALLBACK_CHECK_WD_GET_METHOD(self):
+        touch = self.resource.validate_oneTouch_signature(test_helper.METHOD_GET['SIGNATURE'],
+                                                          test_helper.METHOD_GET['NONCE'],
+                                                          test_helper.METHOD_GET['METHOD'],
+                                                          test_helper.METHOD_GET['URL'], test_helper.params)
+        self.assertIsInstance(touch, bool)
+        self.assertEqual(touch, True)
+
+    def test_ONETOUCH_CALLBACK_CHECK_WD_GET_METHOD_INVAILED_NONCE(self):
+        touch = self.resource.validate_oneTouch_signature(test_helper.METHOD_GET['SIGNATURE'],
+                                                          'INVAILED NONCE',
+                                                          test_helper.METHOD_GET['METHOD'],
+                                                          test_helper.METHOD_GET['URL'], test_helper.params)
+        self.assertIsInstance(touch, bool)
+        self.assertEqual(touch, False)
 
 if __name__ == "__main__":
 	    unittest.main()
