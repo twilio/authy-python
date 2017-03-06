@@ -219,7 +219,7 @@ class Phone(Instance):
 
 class Phones(Resource):
 
-    def verification_start(self, phone_number, country_code, via='sms', locale=None):
+    def verification_start(self, phone_number, country_code, via='sms', locale=None, optionalOptions={}):
         options = {
             'phone_number': phone_number,
             'country_code': country_code,
@@ -228,6 +228,8 @@ class Phones(Resource):
 
         if locale:
             options['locale'] = locale
+        
+        options.update(optionalOptions)
 
         resp = self.post("/protected/json/phones/verification/start", options)
         return Phone(self, resp)
