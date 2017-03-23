@@ -309,7 +309,8 @@ class Phones(Resource):
         :param string locale: optional default none
         :return:
         """
-        if via != 'sms' or via != 'call':
+
+        if via != 'sms' and via != 'call':
             raise AuthyFormatException("Invalid Via. Expected 'sms' or 'call'.")
 
         options = {
@@ -347,7 +348,7 @@ class Phones(Resource):
         }
         resp = self.get("/protected/json/phones/info", options)
         return Phone(self, resp)
-    
+
 class oneTouchResponse(Instance):
     """
     oneTouch response handler.
@@ -397,15 +398,6 @@ class oneTouch(Resource):
 
         if not message:
             raise AuthyFormatException('Invalid message - should not be empty. It is required')
-
-        if seconds_to_expire and not isinstance(seconds_to_expire, int):
-            raise AuthyFormatException('Invalid seconds_to_expire. 0 or positive integer required')
-
-        if not len(details) or not isinstance(details, dict):
-            raise AuthyFormatException('Invalid details - should not be empty. It is required')
-
-        if not len(hidden_details) or not isinstance(hidden_details, dict):
-            raise AuthyFormatException('Invalid hidden_details - should not be empty. It is required')
 
         data = {
             "message": message[:MAX_STRING_SIZE],
@@ -543,5 +535,3 @@ class oneTouch(Resource):
                 temp_hash[k[:MAX_STRING_SIZE]] = self.__clean_inputs(params[k]);
 
         return temp_hash
-
-
