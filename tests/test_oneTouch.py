@@ -39,6 +39,17 @@ class oneTouchTest(unittest.TestCase):
         self.assertIsNotNone(touch.get_uuid())
         self.assertNotEqual(self.resource.get_approval_status(touch.get_uuid()).status(), False)
 
+    def test_send_request_with_minimum_data(self):
+        user_id = test_helper.AUTH_ID_A
+        message = "Login requested for a CapTrade Bank account."
+        touch = self.resource.send_request(user_id, message)
+
+        self.assertIsInstance(touch, oneTouchResponse)
+        self.assertTrue(touch.ok())
+        self.assertEqual(touch.errors(), {})
+        self.assertIsNotNone(touch.get_uuid())
+        self.assertNotEqual(self.resource.get_approval_status(touch.get_uuid()).status(), False)
+
     def test_send_request_with_balnk_userId(self):
         user_id = ''
         message = "Login requested for a CapTrade Bank account."
@@ -82,7 +93,7 @@ class oneTouchTest(unittest.TestCase):
 
     def test_send_request_with_balnk_details(self):
         user_id = test_helper.AUTH_ID_A
-        message = 'Some test message' 
+        message = 'Some test message'
         seconds_to_expire = 120
 
         details = {}
@@ -140,25 +151,6 @@ class oneTouchTest(unittest.TestCase):
         except AuthyException as e:
             self.assertEqual(str(e), "Invalid logos list. Only res and url required")
 
-    def test_send_request_with_blank_hidden_details(self):
-        user_id = test_helper.AUTH_ID_A
-        message = 'Test Message'
-        seconds_to_expire = 120
-
-        details = {}
-        details['username'] = 'example@example.com'
-        details['location'] = 'California, USA'
-        details['Account Number'] = test_helper.AUTH_ID_B
-
-        hidden_details = {}
-
-        logos = [dict(wrong='default', url='https://www.python.org/static/img/python-logo.png'),
-                 dict(res='low', url='https://www.python.org/static/img/python-logo.png')]
-
-        try:
-            touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
-        except AuthyException as e:
-            self.assertEqual(str(e), "Invalid hidden_details - should not be empty. It is required")
 
     def test_ONETOUCH_CALLBACK_CHECK_WD_POST_MEHTHOD(self):
 
@@ -184,7 +176,8 @@ class oneTouchTest(unittest.TestCase):
         touch = self.resource.validate_oneTouch_signature(test_helper.METHOD_GET['SIGNATURE'],
                                                           test_helper.METHOD_GET['NONCE'],
                                                           test_helper.METHOD_GET['METHOD'],
-                                                          test_helper.METHOD_GET['URL'], test_helper.params)
+                                                          test_helper.METHOD_GET['URL'],
+                                                          test_helper.params)
         self.assertIsInstance(touch, bool)
         self.assertEqual(touch, True)
 
