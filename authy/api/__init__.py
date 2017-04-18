@@ -4,6 +4,7 @@ from authy.api.resources import Tokens
 from authy.api.resources import Apps
 from authy.api.resources import StatsResource
 from authy.api.resources import Phones
+from authy.api.resources import oneTouch
 
 
 class AuthyApiClient(object):
@@ -20,6 +21,7 @@ class AuthyApiClient(object):
         self.apps = Apps(api_uri, api_key)
         self.stats = StatsResource(api_uri, api_key)
         self.phones = Phones(api_uri, api_key)
+        self.oneTouch = oneTouch(api_uri, api_key)
         self.api_key = api_key
 
     def version(self):
