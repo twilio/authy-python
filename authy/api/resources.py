@@ -372,10 +372,10 @@ class oneTouchResponse(Instance):
 
     def status(self):
         success = False
-        if (not isinstance(self.content, dict)):
-            success = self.content
-        elif ('success' in self.content):
+
+        if ('success' in self.content):
             success = self.content['success']
+
         return success
 
 
