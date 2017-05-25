@@ -349,18 +349,18 @@ class Phones(Resource):
         resp = self.get("/protected/json/phones/info", options)
         return Phone(self, resp)
 
-class oneTouchResponse(Instance):
+class OneTouchResponse(Instance):
     """
-    oneTouch response handler.
+    OneTouch response handler.
     """
     def __init__(self, resource, response):
         """
-        oneTouchResponse constructor. receives two prams
+        OneTouchResponse constructor. receives two prams
         :param resource instance:
-        :param response of oneTouch datatype:
+        :param response of OneTouch datatype:
         """
         self.uuid = None
-        super(oneTouchResponse, self).__init__(resource, response)
+        super(OneTouchResponse, self).__init__(resource, response)
         if (isinstance(self.content, dict) and 'approval_request' in self.content):
             self.uuid = self.content['approval_request']['uuid']
 
@@ -379,7 +379,7 @@ class oneTouchResponse(Instance):
         return success
 
 
-class oneTouch(Resource):
+class OneTouch(Resource):
 
     def send_request(self, user_id, message, seconds_to_expire=None, details={}, hidden_details={}, logos=[]):
         """
@@ -390,7 +390,7 @@ class oneTouch(Resource):
         :param dict details:  For example details['Requested by'] = 'MacBook Pro, Chrome'; it will be displayed on Authy app
         :param dict hidden_details: Same usage as detail except this detail is not shown in Authy app
         :param list logos: Contains the logos that will be shown to user. The logos parameter is expected to be an array of objects, each object with two fields: res (values are default,low,med,high) and url
-        :return oneTouchResponse: the server response Json Object
+        :return OneTouchResponse: the server response Json Object
         """
 
         if not user_id or not isinstance(user_id, int):
@@ -409,7 +409,7 @@ class oneTouch(Resource):
 
         request_url = "/onetouch/json/users/{0}/approval_requests".format(user_id)
         response = self.post(request_url, data)
-        return oneTouchResponse(self, response)
+        return OneTouchResponse(self, response)
 
 
     def clean_logos(self, logos):
@@ -444,13 +444,13 @@ class oneTouch(Resource):
         """
         OneTouch verification request. Sends a request for Auth App. For more info https://www.twilio.com/docs/api/authy/authy-onetouch-api
         :param string uuid Required. The approval request ID. (Obtained from the response to an ApprovalRequest):
-        :return oneTouchResponse the server response Json Object:
+        :return OneTouchResponse the server response Json Object:
         """
         request_url = "/onetouch/json/approval_requests/{0}".format(uuid)
         response = self.get(request_url)
-        return oneTouchResponse(self,response)
+        return OneTouchResponse(self,response)
 
-    def validate_oneTouch_signature(self, signature, nonce, method, url, params):
+    def validate_one_touch_signature(self, signature, nonce, method, url, params):
         """
         Function to validate signature in X-Authy-Signature key of headers.
 
