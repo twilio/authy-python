@@ -199,7 +199,7 @@ To generate a OneTouch approval request which user can accept or reject on Authy
     message= "Login requested for a CapTrade Bank account.",
     seconds_to_expire= 120,
     
-    response = authy_api.oneTouch.send_request(user_id, message,seconds_to_expire, details, hidden_details,logos)
+    response = authy_api.one_touch.send_request(user_id, message,seconds_to_expire, details, hidden_details,logos)
     if response.ok():
         # do your stuff.
         UUID = response.get_uuid()
@@ -210,7 +210,7 @@ To generate a OneTouch approval request which user can accept or reject on Authy
 ### Check OneTouch UUID status
 If you want to check status (accepted/rejected) of OneTouch approval request UUID
 
-    approval_status = authy_api.oneTouch.get_approval_status(UUID)
+    approval_status = authy_api.one_touch.get_approval_status(UUID)
     if status_response.ok():
         # do your stuff.
         status = approval_status.status()
@@ -228,7 +228,7 @@ Here is an example of Django 1.10.5 implementation
     URL = request.META["HTTP_X_FORWARDED_FOR"] + '://' + request.META["HTTP_HOST"] + request.path
     params = request.body.decode('utf-8')
     params = json.loads(params)
-    isValidate = authy_api.oneTouch.validateOneTouchSignature(AUTHY_SIGNATURE, NONCE, REQUEST_METHOD, URL, params)
+    isValidate = authy_api.one_touch.validateOneTouchSignature(AUTHY_SIGNATURE, NONCE, REQUEST_METHOD, URL, params)
     if isValidate:
         # do your stuff.
     else:

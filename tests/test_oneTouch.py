@@ -7,14 +7,14 @@ else:
     import unittest
 
 from authy import AuthyException
-from authy.api.resources import oneTouchResponse
-from authy.api.resources import oneTouch
+from authy.api.resources import OneTouchResponse
+from authy.api.resources import OneTouch
 
 
-class oneTouchTest(unittest.TestCase):
+class OneTouchTest(unittest.TestCase):
 
     def setUp(self):
-        self.resource = oneTouch(test_helper.LIVE_API_URL, test_helper.LIVE_API_KEY)
+        self.resource = OneTouch(test_helper.LIVE_API_URL, test_helper.LIVE_API_KEY)
 
     def test_send_request_with_valid_data(self):
         user_id = test_helper.AUTH_ID_A
@@ -33,7 +33,7 @@ class oneTouchTest(unittest.TestCase):
 
 
         touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
-        self.assertIsInstance(touch, oneTouchResponse)
+        self.assertIsInstance(touch, OneTouchResponse)
         self.assertTrue(touch.ok())
         self.assertEqual(touch.errors(), {})
         self.assertIsNotNone(touch.get_uuid())
@@ -44,7 +44,7 @@ class oneTouchTest(unittest.TestCase):
         message = "Login requested for a CapTrade Bank account."
         touch = self.resource.send_request(user_id, message)
 
-        self.assertIsInstance(touch, oneTouchResponse)
+        self.assertIsInstance(touch, OneTouchResponse)
         self.assertTrue(touch.ok())
         self.assertEqual(touch.errors(), {})
         self.assertIsNotNone(touch.get_uuid())
@@ -154,7 +154,7 @@ class oneTouchTest(unittest.TestCase):
 
     def test_ONETOUCH_CALLBACK_CHECK_WD_POST_MEHTHOD(self):
 
-        touch = self.resource.validate_oneTouch_signature(test_helper.METHOD_POST['SIGNATURE'],
+        touch = self.resource.validate_one_touch_signature(test_helper.METHOD_POST['SIGNATURE'],
                                                           test_helper.METHOD_POST['NONCE'],
                                                           test_helper.METHOD_POST['METHOD'],
                                                           test_helper.METHOD_POST['URL'],
@@ -164,7 +164,7 @@ class oneTouchTest(unittest.TestCase):
 
     def test_ONETOUCH_CALLBACK_CHECK_WD_POST_MEHTHOD_INVAILED_NONCE(self):
 
-        touch = self.resource.validate_oneTouch_signature(test_helper.METHOD_POST['SIGNATURE'],
+        touch = self.resource.validate_one_touch_signature(test_helper.METHOD_POST['SIGNATURE'],
                                                           'INVAILED NONCE',
                                                           test_helper.METHOD_POST['METHOD'],
                                                           test_helper.METHOD_POST['URL'],
@@ -173,7 +173,7 @@ class oneTouchTest(unittest.TestCase):
         self.assertEqual(touch, False)
 
     def test_ONETOUCH_CALLBACK_CHECK_WD_GET_METHOD(self):
-        touch = self.resource.validate_oneTouch_signature(test_helper.METHOD_GET['SIGNATURE'],
+        touch = self.resource.validate_one_touch_signature(test_helper.METHOD_GET['SIGNATURE'],
                                                           test_helper.METHOD_GET['NONCE'],
                                                           test_helper.METHOD_GET['METHOD'],
                                                           test_helper.METHOD_GET['URL'],
@@ -182,7 +182,7 @@ class oneTouchTest(unittest.TestCase):
         self.assertEqual(touch, True)
 
     def test_ONETOUCH_CALLBACK_CHECK_WD_GET_METHOD_INVAILED_NONCE(self):
-        touch = self.resource.validate_oneTouch_signature(test_helper.METHOD_GET['SIGNATURE'],
+        touch = self.resource.validate_one_touch_signature(test_helper.METHOD_GET['SIGNATURE'],
                                                           'INVAILED NONCE',
                                                           test_helper.METHOD_GET['METHOD'],
                                                           test_helper.METHOD_GET['URL'], test_helper.params)
