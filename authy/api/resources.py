@@ -425,7 +425,12 @@ class OneTouch(Resource):
 
         temp_array = {}
         clean_logos = []
+
         for logo in logos:
+
+            if not isinstance(logo, dict):
+                raise AuthyFormatException('Invalid logo type')
+
             for l in logo:
                 # We ignore any additional parameter on the logos, and truncate
                 # string size to the maximum allowed.
@@ -438,6 +443,7 @@ class OneTouch(Resource):
 
             clean_logos.append(temp_array)
             temp_array = {}
+
         return clean_logos
 
     def get_approval_status(self, uuid):
