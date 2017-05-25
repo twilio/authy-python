@@ -91,7 +91,7 @@ class OneTouchTest(unittest.TestCase):
         except AuthyException as e:
             self.assertEqual(str(e), "Invalid message - should not be empty. It is required")
 
-    def test_send_request_with_balnk_details(self):
+    def test_send_request_with_blank_details(self):
         user_id = test_helper.AUTH_ID_A
         message = 'Some test message'
         seconds_to_expire = 120
@@ -109,7 +109,7 @@ class OneTouchTest(unittest.TestCase):
         except AuthyException as e:
             self.assertEqual(str(e), "Invalid details - should not be empty. It is required")
 
-    def test_send_request_with_inValid_logoKey(self):
+    def test_send_request_with_invalid_logoKey(self):
         user_id = test_helper.AUTH_ID_A
         message = 'Test Message'
         seconds_to_expire = 120
@@ -130,7 +130,7 @@ class OneTouchTest(unittest.TestCase):
         except AuthyException as e:
             self.assertEqual(str(e), "Invalid logos list. Only res and url required")
 
-    def test_send_request_with_inValid_logo_dataType(self):
+    def test_send_request_with_invalid_logo_dataType(self):
         user_id = test_helper.AUTH_ID_A
         message = 'Test Message'
         seconds_to_expire = 120
