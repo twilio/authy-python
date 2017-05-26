@@ -81,3 +81,4 @@ Version 2.1.5
 -------------
 
 - Added onetouch support.
+- Request token via call
