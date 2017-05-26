@@ -40,7 +40,7 @@ class TokensTest(unittest.TestCase):
     def test_verify_longer_token(self):
         user = self.users.create('test@example.com', '202-555-0166', 1)
         try:
-            token = self.resource.verify(user.id, '00000001111')
+            token = self.resource.verify(user.id, '0000000111111')
             self.fail()
         except Exception, e:
             self.assertIsInstance(e, AuthyFormatException)

@@ -76,3 +76,9 @@ Version 2.1.4
 -------------
 
 - Added make target to run independent test files.
+
+Version 2.1.5
+-------------
+
+- Added onetouch support.
+- Request token via call

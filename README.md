@@ -114,6 +114,18 @@ To check a user status, just pass the user id.
 user = authy_api.users.status('authy-id')
 ```
 
+## Requesting Call Tokens
+
+To request a Call token you only need the user id.
+
+```python
+call = authy_api.users.request_call('authy-id')
+```
+
+As always, you can use `ok()` to verify if the token was sent.
+
+This call will be ignored if the user is using the Authy Mobile App. If you still want to send it, you need to force call option in dashboard settings
+
 ## Delete User
 
 To delete a user, just pass the user id.
@@ -179,6 +191,60 @@ If you want to gather additional information about user phone, use phones info.
 ```python
 authy_api.phones.info(phone_number, country_code)
 ```
+## OneToch API
+Authy OneTouch uses a very simple API consisting of two endpoints. One for creating approval requests and another to check the status of the approval request. To simplify the process of handling a request, you can set a callback URL in the Authy dashboard. 
+
+### Send Approval Request
+To generate a OneTouch approval request which user can accept or reject on Authy App
+
+    details ={}
+    details['username']='example@example.com'
+    details['location']='California, USA'
+    details['Account Number']='987654'
+    
+    logos= [dict(res = 'default', url = 'https://example.com/logos/default.png'), dict(res = 'low', url = 'https://example.com/logos/default.png')]
+        
+    hidden_details = {}
+    hidden_details['ip_address'] = '110.37.200.52'
+        
+    user_id= "654321"
+    message= "Login requested for a CapTrade Bank account.",
+    seconds_to_expire= 120,
+    
+    response = authy_api.one_touch.send_request(user_id, message,seconds_to_expire, details, hidden_details,logos)
+    if response.ok():
+        # do your stuff.
+        UUID = response.get_uuid()
+    else:
+        # do your stuff.
+       
+    
+### Check OneTouch UUID status
+If you want to check status (accepted/rejected) of OneTouch approval request UUID
+
+    approval_status = authy_api.one_touch.get_approval_status(UUID)
+    if status_response.ok():
+        # do your stuff.
+        status = approval_status.status()
+    else:
+        # do your stuff, may be you want to ignore this.
+
+### OneTouch Callback implementation
+Here is an example of Django 1.10.5 implementation
+    
+    from authy.api import AuthyApiClient
+    authy_api = AuthyApiClient(APIKEY)
+    NONCE = request.META["HTTP_X_AUTHY_SIGNATURE_NONCE"]
+    AUTHY_SIGNATURE = request.META["HTTP_X_AUTHY_SIGNATURE"]
+    REQUEST_METHOD = request.META["REQUEST_METHOD"]
+    URL = request.META["HTTP_X_FORWARDED_FOR"] + '://' + request.META["HTTP_HOST"] + request.path
+    params = request.body.decode('utf-8')
+    params = json.loads(params)
+    isValidate = authy_api.one_touch.validateOneTouchSignature(AUTHY_SIGNATURE, NONCE, REQUEST_METHOD, URL, params)
+    if isValidate:
+        # do your stuff.
+    else:
+        # do your stuff.
 
 ## More…
 
