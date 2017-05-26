@@ -114,6 +114,18 @@ To check a user status, just pass the user id.
 user = authy_api.users.status('authy-id')
 ```
 
+## Requesting Call Tokens
+
+To request a Call token you only need the user id.
+
+```python
+call = authy_api.users.request_call('authy-id')
+```
+
+As always, you can use `ok()` to verify if the token was sent.
+
+This call will be ignored if the user is using the Authy Mobile App. If you still want to send it, you need to force call option in dashboard settings
+
 ## Delete User
 
 To delete a user, just pass the user id.

@@ -176,6 +176,16 @@ class Sms(Instance):
         except KeyError:
             return False
 
+class Call(Instance):
+    """
+    call response handler
+    """
+    def ignored(self):
+        try:
+            self.content['ignored']
+            return True
+        except KeyError:
+            return False
 
 class User(Instance):
     """
@@ -225,6 +235,11 @@ class Users(Resource):
         resp = self.get("/protected/json/sms/" + quote(str(user_id)), options)
 
         return Sms(self, resp)
+
+    def request_call(self, user_id, options={}):
+        resp = self.get("/protected/json/call/" + quote(str(user_id)), options)
+
+        return Call(self, resp)
 
     def status(self, user_id):
         resp = self.get("/protected/json/users/{0}/status".format(user_id))
