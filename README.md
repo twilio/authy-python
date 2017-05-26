@@ -36,7 +36,7 @@ A cellphone is uniquely associated with an authy_id.__
 Creating users is very easy, you need to pass an email, a cellphone and _optionally_ a country code:
 
 ```python
-user = authy_api.users.create('new_user@email.com', '405-342-5699', 57) #email, cellphone, area_code
+user = authy_api.users.create('new_user@email.com', '405-342-5699', 57) #email, cellphone, country_code
 ```
 
 In this case, `57` is the country code for Colombia. This defaults to `1` for the USA.
