@@ -191,7 +191,7 @@ If you want to gather additional information about user phone, use phones info.
 ```python
 authy_api.phones.info(phone_number, country_code)
 ```
-## OneToch API
+## OneTouch API
 Authy OneTouch uses a very simple API consisting of two endpoints. One for creating approval requests and another to check the status of the approval request. To simplify the process of handling a request, you can set a callback URL in the Authy dashboard. 
 
 ### Send Approval Request
