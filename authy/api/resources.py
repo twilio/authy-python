@@ -1,7 +1,7 @@
 import requests
 import platform
 import six
-import hashlib, hmac, base64
+import hashlib, hmac, base64, re
 
 from authy import __version__, AuthyFormatException
 
@@ -496,9 +496,10 @@ class OneTouch(Resource):
 
 
         query_params = self.__make_http_query(params)
-
         # Sort and replace encoded  params in case-sensitive order
         sorted_params = '&'.join(sorted(query_params.replace('/', '%2F').replace('%20', '+').split('&')))
+        sorted_params = re.sub("\\%5B([0-9])*\\%5D","%5B%5D",sorted_params)
+        sorted_params = re.sub("\\=None", "=", sorted_params)
         data = nonce + "|" + method + "|" + url + "|" + sorted_params
         try:
             calculated_signature = base64.b64encode(hmac.new(self.api_key.encode(), data.encode(), hashlib.sha256).digest())
@@ -528,7 +529,10 @@ class OneTouch(Resource):
                 elif type(params[key]) is list:
                     i = 0
                     for val in params[key]:
-                        result += newkey + quote('[' + str(i) + ']') + "=" + quote(str(val)) + "&"
+                        if type(val) is dict:
+                            result +=   self.__make_http_query(val, newkey + quote('['+str(i)+']'))
+                        else:
+                            result += newkey + quote('['+str(i)+']') + "=" + quote(str(val)) + "&"
                         i = i + 1
                 # boolean should have special treatment as well
                 elif type(params[key]) is bool:
