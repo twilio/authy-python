@@ -240,8 +240,8 @@ Here is an example of Django 1.10.5 implementation
     URL = request.META["HTTP_X_FORWARDED_FOR"] + '://' + request.META["HTTP_HOST"] + request.path
     params = request.body.decode('utf-8')
     params = json.loads(params)
-    isValidate = authy_api.one_touch.validateOneTouchSignature(AUTHY_SIGNATURE, NONCE, REQUEST_METHOD, URL, params)
-    if isValidate:
+    is_valid = authy_api.one_touch.validate_one_touch_signature(AUTHY_SIGNATURE, NONCE, REQUEST_METHOD, URL, params)
+    if is_valid:
         # do your stuff.
     else:
         # do your stuff.
