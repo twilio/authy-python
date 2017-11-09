@@ -40,7 +40,6 @@ class OneTouchTest(unittest.TestCase):
         self.assertNotEqual(self.resource.get_approval_status(touch.get_uuid()).status(), False)
         self.assertEqual(self.resource.get_approval_status(touch.get_uuid()).get_approval(), 'pending')
 
-
     def test_send_request_with_minimum_data(self):
         user_id = test_helper.AUTH_ID_A
         message = "Login requested for a CapTrade Bank account."
