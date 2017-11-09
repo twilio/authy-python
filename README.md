@@ -222,10 +222,19 @@ To generate a OneTouch approval request which user can accept or reject on Authy
 ### Check OneTouch UUID status
 If you want to check status (accepted/rejected) of OneTouch approval request UUID
 
+Use the get_approval() method or use \_\_getitem\_\_ method buried in object instance class.
+
     approval_status = authy_api.one_touch.get_approval_status(UUID)
-    if status_response.ok():
-        # do your stuff.
-        status = approval_status.status()
+    if approval_status.ok(): #This only returns True if the response code is 200
+        status = approval_status.status() #This is misleading. It returns the request status not approval status
+                                          #Hopefully no one is using this for any validation.
+
+        if approval_status.get_approval() == 'approved':
+            print('do stuff')
+
+       ###Or
+       #if approval_status.__getitem__('approval_request')['status'] == 'approved':
+       #    print('do stuff')  
     else:
         # do your stuff, may be you want to ignore this.
 
