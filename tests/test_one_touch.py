@@ -38,6 +38,7 @@ class OneTouchTest(unittest.TestCase):
         self.assertEqual(touch.errors(), {})
         self.assertIsNotNone(touch.get_uuid())
         self.assertNotEqual(self.resource.get_approval_status(touch.get_uuid()).status(), False)
+        self.assertEqual(self.resource.get_approval_status(touch.get_uuid()).get_approval(), 'pending')
 
     def test_send_request_with_minimum_data(self):
         user_id = test_helper.AUTH_ID_A
@@ -49,8 +50,9 @@ class OneTouchTest(unittest.TestCase):
         self.assertEqual(touch.errors(), {})
         self.assertIsNotNone(touch.get_uuid())
         self.assertNotEqual(self.resource.get_approval_status(touch.get_uuid()).status(), False)
+        self.assertEqual(self.resource.get_approval_status(touch.get_uuid()).get_approval(), 'pending')
 
-    def test_send_request_with_balnk_userId(self):
+    def test_send_request_with_blank_userId(self):
         user_id = ''
         message = "Login requested for a CapTrade Bank account."
         seconds_to_expire = 120
@@ -71,7 +73,7 @@ class OneTouchTest(unittest.TestCase):
         except AuthyException as e:
             self.assertEqual(str(e), "Invalid authy id, user id is requred and must be an integer value.")
 
-    def test_send_request_with_balnk_message(self):
+    def test_send_request_with_blank_message(self):
         user_id = test_helper.AUTH_ID_A
         message = ''
         seconds_to_expire = 120
