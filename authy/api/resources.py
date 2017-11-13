@@ -389,10 +389,8 @@ class OneTouchResponse(Instance):
         return self.uuid
 
     #Returns user approval.
-    #False if not set,pending,approved,denied
+    #None,pending,approved,denied
     def get_approval(self):
-        if not self.approval:
-            return False
         return self.approval
 
     def status(self):
