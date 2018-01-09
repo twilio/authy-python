@@ -375,15 +375,23 @@ class OneTouchResponse(Instance):
         :param response of OneTouch datatype:
         """
         self.uuid = None
+        self.approval = None
         super(OneTouchResponse, self).__init__(resource, response)
         if (isinstance(self.content, dict) and 'approval_request' in self.content):
             self.uuid = self.content['approval_request']['uuid']
+            if 'status' in self.content['approval_request']:
+                self.approval = self.content['approval_request'].get('status')
 
 
     def get_uuid(self):
         if not self.uuid:
             return False
         return self.uuid
+
+    #Returns user approval.
+    #None,pending,approved,denied
+    def get_approval(self):
+        return self.approval
 
     def status(self):
         success = False
