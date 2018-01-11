@@ -208,7 +208,7 @@ If you want to check status (accepted/rejected) of OneTouch approval request UUI
 ```python
 status_response = authy_api.one_touch.get_approval_status(uuid)
 if status_response.ok():
-    # one of 'pending', 'approved', or 'denied' 
+    # one of 'pending', 'approved', 'denied', or 'expired'
     approval_status = status.content['approval_request']['status']
 
 else:
