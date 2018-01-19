@@ -267,7 +267,7 @@ class Tokens(Resource):
         if 'force' not in options:
             options['force'] = "true"
         resp = self.get(
-            "/protected/json/verify/{}/{}".format(quote(str(token)), quote(str(device_id))), options)
+            "/protected/json/verify/{0}/{1}".format(quote(str(token)), quote(str(device_id))), options)
         return Token(self, resp)
 
     def __validate(self, token, device_id):
