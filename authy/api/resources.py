@@ -26,7 +26,7 @@ MAX_STRING_SIZE = 200
 
 class Resource(object):
     """
-    Request CRUD defined in Resouce.
+    Request CRUD defined in Resource.
     """
     def __init__(self, api_uri, api_key):
         """
