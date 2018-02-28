@@ -6,6 +6,8 @@ docs/build
 *.py[co]
 *.swp
 venv/
+env/
+.DS_Store
 
 # pyenv
 .python-version
