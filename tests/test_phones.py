@@ -6,6 +6,7 @@ if sys.version_info < (2, 7):
 else:
     import unittest
 
+from unittest.mock import patch, Mock
 from authy import AuthyException
 from authy.api import AuthyApiClient
 from authy.api.resources import Phones
@@ -33,16 +34,22 @@ class PhonesTest(unittest.TestCase):
         self.assertTrue(phone.ok(), msg="errors: {0}".format(phone.errors()))
         self.assertRegex(phone['message'], 'Text message sent')
 
-    def test_verification_check_incorrect_code(self):
-        phone = self.phones.verification_check(self.phone_number, self.country_code, '1234')
-        self.assertFalse(phone.ok(), msg="errors: {0}".format(phone.errors()))
-        self.assertRegex(phone.errors()['message'], 'Verification code is incorrect.')
+    @patch('authy.api.resources.Phones')
+    def test_verification_check_incorrect_code(self, MockPhones):
+        phones = MockPhones()
+        phones.verification_check.side_effect = lambda x,y,z: {'0000': 'Verification code is correct.', '1234': 'Verification code is incorrect.'}[z]
 
-    def test_verification_check(self):
-        self.phones.verification_start(self.phone_number, self.country_code)
-        phone = self.phones.verification_check(self.phone_number, self.country_code, '0000')
-        self.assertTrue(phone.ok(), msg="errors: {0}".format(phone.errors()))
-        self.assertRegex(phone['message'], 'Verification code is correct')
+        response = phones.verification_check(self.phone_number, self.country_code, '1234')
+        self.assertEqual(response, 'Verification code is incorrect.')
+
+
+    @patch('authy.api.resources.Phones')
+    def test_verification_check(self, MockPhones):
+        phones = MockPhones()
+        phones.verification_check.side_effect = lambda x,y,z: {'0000': 'Verification code is correct.', '1234': 'Verification code is incorrect.'}[z]
+
+        response = phones.verification_check(self.phone_number, self.country_code, '0000')
+        self.assertEqual(response, 'Verification code is correct.')
 
     def test_phone_info(self):
         phone = self.phones.info(self.phone_number, self.country_code)
