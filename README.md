@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/authy/authy-python.svg?branch=master)](https://travis-ci.org/authy/authy-python)
+
 # Python Client for Authy API
 
 A python library for using the Authy public API.
