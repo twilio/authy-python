@@ -316,7 +316,6 @@ class Phones(Resource):
 
     def verification_start(self, phone_number, country_code, via='sms', locale=None):
         """
-
         :param string phone_number: stored in your databse or you provided while creating new user.
         :param string country_code: stored in your databse or you provided while creating new user.
         :param string via: verification method either sms or call
@@ -341,7 +340,6 @@ class Phones(Resource):
 
     def verification_check(self, phone_number, country_code, verification_code):
         """
-
         :param phone_number:
         :param country_code:
         :param verification_code:
@@ -500,10 +498,8 @@ class OneTouch(Resource):
         sorted_params = re.sub("\\%5B([0-9])*\\%5D","%5B%5D",sorted_params)
         sorted_params = re.sub("\\=None", "=", sorted_params)
         data = nonce + "|" + method + "|" + url + "|" + sorted_params
-        print(data)
         try:
             calculated_signature = base64.b64encode(hmac.new(self.api_key.encode(), data.encode(), hashlib.sha256).digest())
-            print(calculated_signature)
             return calculated_signature.decode() == signature
         except:
             calculated_signature = base64.b64encode(hmac.new(self.api_key, data, hashlib.sha256).digest())
