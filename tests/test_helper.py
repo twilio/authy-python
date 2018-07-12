@@ -10,9 +10,6 @@ LIVE_API_KEY = ""
 LIVE_API_URL = "https://api.authy.com"
 
 
-
-
-
 METHOD_POST = dict(
     SIGNATURE = '0Fl2yGPwgjhQCuiIyQXTaL56BL8ptyjso1kVgau5q1s=',
     API_KEY = 'mTIn3Dq5HrF7r84rNTA0OrHys077egq3',
