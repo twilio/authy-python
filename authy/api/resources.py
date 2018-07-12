@@ -24,6 +24,11 @@ MIN_TOKEN_SIZE = 6
 MAX_TOKEN_SIZE = 12
 MAX_STRING_SIZE = 200
 
+try:
+    _PLAT_STR = platform.platform(True)
+except IOError:
+    _PLAT_STR = "unknown_platform"
+
 class Resource(object):
     """
     Request CRUD defined in Resouce.
@@ -105,16 +110,10 @@ class Resource(object):
             return requests.request(method, url, headers=headers, params=params, data=json.dumps(data))
 
     def __default_headers(self):
-        platform_value = ""
-        try:
-          platform_value = platform.platform(True)
-        except:
-          platform_value = "unknown_platform"
-
         return {
             'User-Agent': "AuthyPython/{0} ({1}; Python {2})".format(
                 __version__,
-                platform.platform(True),
+                _PLAT_STR,
                 platform.python_version()
             )}
 
