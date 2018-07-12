@@ -24,18 +24,17 @@ class OneTouchTest(unittest.TestCase):
         details = {}
         details['username'] = 'example@example.com'
         details['location'] = 'California, USA'
-        details['Account Number'] = test_helper.AUTH_ID_B
+        details['Account Number'] = '8675309'
 
         hidden_details = {}
         hidden_details['ip_address'] = '110.37.200.52'
 
         logos = [dict(res='default', url='https://www.python.org/static/img/python-logo.png'), dict(res='low', url='https://www.python.org/static/img/python-logo.png')]
 
-
         touch = self.resource.send_request(user_id, message, seconds_to_expire, details, hidden_details, logos)
         self.assertIsInstance(touch, OneTouchResponse)
-        self.assertTrue(touch.ok())
         self.assertEqual(touch.errors(), {})
+        self.assertTrue(touch.ok())
         self.assertIsNotNone(touch.get_uuid())
         self.assertNotEqual(self.resource.get_approval_status(touch.get_uuid()).status(), False)
 
@@ -45,8 +44,8 @@ class OneTouchTest(unittest.TestCase):
         touch = self.resource.send_request(user_id, message)
 
         self.assertIsInstance(touch, OneTouchResponse)
-        self.assertTrue(touch.ok())
         self.assertEqual(touch.errors(), {})
+        self.assertTrue(touch.ok())
         self.assertIsNotNone(touch.get_uuid())
         self.assertNotEqual(self.resource.get_approval_status(touch.get_uuid()).status(), False)
 
@@ -154,38 +153,39 @@ class OneTouchTest(unittest.TestCase):
 
     def test_ONETOUCH_CALLBACK_CHECK_WD_POST_MEHTHOD(self):
 
-        touch = self.resource.validate_one_touch_signature(test_helper.METHOD_POST['SIGNATURE'],
-                                                          test_helper.METHOD_POST['NONCE'],
-                                                          test_helper.METHOD_POST['METHOD'],
-                                                          test_helper.METHOD_POST['URL'],
-                                                          test_helper.params)
+        touch = self.resource.validate_one_touch_signature(test_helper.POST_REQ_SIGNATURE,
+                                                           test_helper.NONCE,
+                                                           "POST",
+                                                           test_helper.URL,
+                                                           test_helper.PARAMS)
         self.assertIsInstance(touch, bool)
         self.assertEqual(touch, True)
 
     def test_ONETOUCH_CALLBACK_CHECK_WD_POST_MEHTHOD_INVAILED_NONCE(self):
 
-        touch = self.resource.validate_one_touch_signature(test_helper.METHOD_POST['SIGNATURE'],
-                                                          'INVAILED NONCE',
-                                                          test_helper.METHOD_POST['METHOD'],
-                                                          test_helper.METHOD_POST['URL'],
-                                                          test_helper.params)
+        touch = self.resource.validate_one_touch_signature(test_helper.POST_REQ_SIGNATURE,
+                                                           'INVAILED NONCE',
+                                                           "POST",
+                                                           test_helper.URL,
+                                                           test_helper.PARAMS)
         self.assertIsInstance(touch, bool)
         self.assertEqual(touch, False)
 
     def test_ONETOUCH_CALLBACK_CHECK_WD_GET_METHOD(self):
-        touch = self.resource.validate_one_touch_signature(test_helper.METHOD_GET['SIGNATURE'],
-                                                          test_helper.METHOD_GET['NONCE'],
-                                                          test_helper.METHOD_GET['METHOD'],
-                                                          test_helper.METHOD_GET['URL'],
-                                                          test_helper.params)
+        touch = self.resource.validate_one_touch_signature(test_helper.GET_REQ_SIGNATURE,
+                                                           test_helper.NONCE,
+                                                           "GET",
+                                                           test_helper.URL,
+                                                           test_helper.PARAMS)
         self.assertIsInstance(touch, bool)
         self.assertEqual(touch, True)
 
     def test_ONETOUCH_CALLBACK_CHECK_WD_GET_METHOD_INVAILED_NONCE(self):
-        touch = self.resource.validate_one_touch_signature(test_helper.METHOD_GET['SIGNATURE'],
-                                                          'INVAILED NONCE',
-                                                          test_helper.METHOD_GET['METHOD'],
-                                                          test_helper.METHOD_GET['URL'], test_helper.params)
+        touch = self.resource.validate_one_touch_signature(test_helper.GET_REQ_SIGNATURE,
+                                                           'INVAILED NONCE',
+                                                           "GET",
+                                                           test_helper.URL,
+                                                           test_helper.PARAMS)
         self.assertIsInstance(touch, bool)
         self.assertEqual(touch, False)
 
