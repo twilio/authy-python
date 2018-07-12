@@ -31,7 +31,7 @@ except IOError:
 
 class Resource(object):
     """
-    Request CRUD defined in Resouce.
+    Request CRUD defined in Resource.
     """
     def __init__(self, api_uri, api_key):
         """
