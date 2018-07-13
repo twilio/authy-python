@@ -3,65 +3,20 @@ python-authy Changelog
 
 Here you can see the full list of changes between each python-authy release.
 
-Version 0.0.1
+Version 2.2.0
+
+- Fixes OneTouch signature validation
+
+Version 2.1.5
 -------------
 
-- Initial version
+- Added onetouch support.
+- Request token via call
 
-VERSION 0.0.2
+Version 2.1.4
 -------------
 
-- Bugfixes
-- Support for requesting sms tokens
-
-Version 0.0.3
--------------
-
-- Bugfixes
-- Allow to pass additional params to request_sms and verify token
-
-Version 0.0.4
--------------
-
-- Improve error parsing
-
-Version 1.0.0
--------------
-
-- Force token verification by default
-
-Version 1.1.0
--------------
-
-- Add support for fetching application details.
-- Add support for fetching application statistics.
-
-Version 2.0.0
--------------
-
-- Make use of requests dependency instead of httplib2.
-
-Version 2.1.0
--------------
-
-- Add support for fetching user status.
-- Add support for start and check phone verification.
-- Add support for get phone info.
-
-
-Version 2.1.1
--------------
-
-- Add support for delete user endpoint.
-- Add method to verify if an SMS request was ignored.
-
-
-Version 2.1.2
--------------
-
-- Add Authy User-Agent to requests headers.
-- Add method to get current library version.
-
+- Added make target to run independent test files.
 
 Version 2.1.3
 -------------
@@ -71,14 +26,60 @@ Version 2.1.3
 - Improvements to README.
 - Updating copyright year.
 
-
-Version 2.1.4
+Version 2.1.2
 -------------
 
-- Added make target to run independent test files.
+- Add Authy User-Agent to requests headers.
+- Add method to get current library version.
 
-Version 2.1.5
+
+Version 2.1.1
 -------------
 
-- Added onetouch support.
-- Request token via call
+- Add support for delete user endpoint.
+- Add method to verify if an SMS request was ignored.
+
+Version 2.1.0
+-------------
+
+- Add support for fetching user status.
+- Add support for start and check phone verification.
+- Add support for get phone info.
+
+Version 2.0.0
+-------------
+
+- Make use of requests dependency instead of httplib2.
+
+Version 1.1.0
+-------------
+
+- Add support for fetching application details.
+- Add support for fetching application statistics.
+
+Version 1.0.0
+-------------
+
+- Force token verification by default
+
+Version 0.0.4
+-------------
+
+- Improve error parsing
+
+Version 0.0.3
+-------------
+
+- Bugfixes
+- Allow to pass additional params to request_sms and verify token
+
+VERSION 0.0.2
+-------------
+
+- Bugfixes
+- Support for requesting sms tokens
+
+Version 0.0.1
+-------------
+
+- Initial version
