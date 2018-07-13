@@ -1,8 +1,15 @@
 language: python
 python:
-  - "2.7"
-  - "3.6"
+- '2.7'
+- '3.6'
 install:
-  - pip install -r requirements.txt
+- pip install -r requirements.txt
 script:
-  - make test
+- make test
+deploy:
+  provider: pypi
+  user: krobs
+  password:
+    secure: QXmexqdXepQxLMAM2hG/0NYXIOe7nZaEBcuEd+3mueLOcjhe2G3aJel+C4fc7cx1o2yvaLA+vJ7ItsuZIk1W2Oei9H5awBHlKJwQqpxGa0joX8OpC4C5HNT4rS5fcFAUVyGEcCC1Q8tuvvX8vZJlGNyft7Bper0lt4GTR3BQma0=
+  on:
+    tags: true
