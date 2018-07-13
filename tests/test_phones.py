@@ -6,7 +6,7 @@ if sys.version_info < (2, 7):
 else:
     import unittest
 
-from unittest.mock import patch, Mock
+from mockito import when, mock
 from authy import AuthyException
 from authy.api import AuthyApiClient
 from authy.api.resources import Phones
@@ -27,35 +27,32 @@ class PhonesTest(unittest.TestCase):
     def test_verification_start_without_via(self):
         phone = self.phones.verification_start(self.phone_number, self.country_code,'sms')
         self.assertTrue(phone.ok(), msg="errors: {0}".format(phone.errors()))
-        self.assertRegex(phone['message'], 'Text message sent')
+        self.assertEquals(phone['message'], 'Text message sent to +1 305-456-2345.')
 
     def test_verification_start(self):
         phone = self.phones.verification_start(self.phone_number, self.country_code)
         self.assertTrue(phone.ok(), msg="errors: {0}".format(phone.errors()))
-        self.assertRegex(phone['message'], 'Text message sent')
+        self.assertEquals(phone['message'], 'Text message sent to +1 305-456-2345.')
 
-    @patch('authy.api.resources.Phones')
-    def test_verification_check_incorrect_code(self, MockPhones):
-        phones = MockPhones()
-        phones.verification_check.side_effect = lambda x,y,z: {'0000': 'Verification code is correct.', '1234': 'Verification code is incorrect.'}[z]
+    def test_verification_check_incorrect_code(self):
+        when(self.phones).verification_check(self.phone_number, self.country_code, '1234').thenReturn(
+            'Verification code is incorrect.')
 
-        response = phones.verification_check(self.phone_number, self.country_code, '1234')
+        response = self.phones.verification_check(self.phone_number, self.country_code, '1234')
         self.assertEqual(response, 'Verification code is incorrect.')
 
+    def test_verification_check(self):
+        when(self.phones).verification_check(self.phone_number, self.country_code, '0000').thenReturn(
+            'Verification code is correct.')
 
-    @patch('authy.api.resources.Phones')
-    def test_verification_check(self, MockPhones):
-        phones = MockPhones()
-        phones.verification_check.side_effect = lambda x,y,z: {'0000': 'Verification code is correct.', '1234': 'Verification code is incorrect.'}[z]
-
-        response = phones.verification_check(self.phone_number, self.country_code, '0000')
+        response = self.phones.verification_check(self.phone_number, self.country_code, '0000')
         self.assertEqual(response, 'Verification code is correct.')
 
     def test_phone_info(self):
         phone = self.phones.info(self.phone_number, self.country_code)
         self.assertTrue(phone.ok(), msg="errors: {0}".format(phone.errors()))
-        self.assertRegex(phone['message'], 'Phone number information as of')
-        self.assertRegex(phone['type'], 'landline')
+        self.assertTrue('Phone number information as of' in phone['message'])
+        self.assertEquals(phone['type'], 'landline')
         self.assertFalse(phone['ported'])
 
 if __name__ == "__main__":
