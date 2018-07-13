@@ -17,4 +17,3 @@ class AuthyApiException(AuthyException):
 
     def __str__(self):
         return "HTTP ERROR %s: %s \n %s" % (self.status, self.msg, self.uri)
-
