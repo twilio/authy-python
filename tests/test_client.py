@@ -1,5 +1,6 @@
 import sys
 import test_helper
+import six
 
 if sys.version_info < (2, 7):
     import unittest2 as unittest
@@ -24,7 +25,11 @@ class ApiClientTest(unittest.TestCase):
         self.assertIsInstance(self.api.users, Users)
 
     def test_version(self):
-    	self.assertRegex(self.api.version(), '\d.\d*')
+        if six.PY3:
+            self.assertRegex(self.api.version(), '\d.\d*')
+        else:
+            import re
+            self.assertTrue(re.compile(r'\d.\d*').search(self.api.version()))
 
 
 if __name__ == "__main__":
