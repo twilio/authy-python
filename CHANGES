@@ -4,8 +4,10 @@ python-authy Changelog
 Here you can see the full list of changes between each python-authy release.
 
 Version 2.2.0
+-------------
 
 - Fixes OneTouch signature validation
+- Now supports Travis CI so we can release more often 🎉
 
 Version 2.1.5
 -------------
