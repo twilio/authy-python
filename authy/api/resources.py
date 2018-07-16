@@ -314,12 +314,14 @@ class Phone(Instance):
 
 class Phones(Resource):
 
-    def verification_start(self, phone_number, country_code, via='sms', locale=None):
+    def verification_start(self, phone_number, country_code, via='sms',
+                           locale=None, code_length=4):
         """
         :param string phone_number: stored in your databse or you provided while creating new user.
         :param string country_code: stored in your databse or you provided while creating new user.
         :param string via: verification method either sms or call
         :param string locale: optional default none
+        :param number code_length: optional default 4
         :return:
         """
 
@@ -334,6 +336,14 @@ class Phones(Resource):
 
         if locale:
             options['locale'] = locale
+
+        try:
+            cl = int(code_length)
+            if cl < 4 or cl > 10:
+                raise ValueError
+            options['code_length'] = cl
+        except ValueError:
+            raise AuthyFormatException("Invalid code_length. Expected numeric value from 4-10.")
 
         resp = self.post("/protected/json/phones/verification/start", options)
         return Phone(self, resp)
