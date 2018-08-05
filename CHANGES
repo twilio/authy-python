@@ -11,14 +11,6 @@ Version 2.2.1
  - [#36](https://github.com/authy/authy-python/pull/36): Add code_length support for phones.verification_start
  - [#24](https://github.com/authy/authy-python/pull/24): Add Python 3 to language classifiers in setup.py
 
-Version 2.2.1
---------------------
-[Full Changelog](https://github.com/authy/authy-python/compare/v2.2.0...v2.2.1)
-
- - [#39](https://github.com/authy/authy-python/pull/39): Adds a release script for automating deployment to PyPI
- - [#36](https://github.com/authy/authy-python/pull/36): Add code_length support for phones.verification_start
- - [#24](https://github.com/authy/authy-python/pull/24): Add Python 3 to language classifiers in setup.py
-
 Version 2.2.0
 -------------
 
