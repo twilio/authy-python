@@ -3,6 +3,13 @@ python-authy Changelog
 
 Here you can see the full list of changes between each python-authy release.
 
+Version 2.2.2
+--------------------
+[Full Changelog](https://github.com/authy/authy-python/compare/v2.2.1...v2.2.2)
+
+ - [#41](https://github.com/authy/authy-python/pull/41): Coerced token to string to allow for length comparison
+ - [#40](https://github.com/authy/authy-python/pull/40): Fix duplicate in CHANGES
+
 Version 2.2.1
 --------------------
 [Full Changelog](https://github.com/authy/authy-python/compare/v2.2.0...v2.2.1)
