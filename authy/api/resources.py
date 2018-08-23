@@ -273,7 +273,7 @@ class Tokens(Resource):
         self.__validate_digit(token, "Invalid Token. Only digits accepted.")
         self.__validate_digit(
             device_id, "Invalid Authy id. Only digits accepted.")
-        length = len(token)
+        length = len(str(token))
         if length < MIN_TOKEN_SIZE or length > MAX_TOKEN_SIZE:
             raise AuthyFormatException("Invalid Token. Unexpected length.")
 
