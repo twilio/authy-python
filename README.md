@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/authy/authy-python.svg?branch=master)](https://travis-ci.org/authy/authy-python)
+[![Build Status](https://travis-ci.org/twilio/authy-python.svg?branch=master)](https://travis-ci.org/authy/authy-python)
 
 # Python Client for Authy API
 
