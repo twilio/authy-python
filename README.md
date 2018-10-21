@@ -269,7 +269,7 @@ print check.content
 # {u'message': u'Verification code is incorrect', u'errors': {u'message': u'Verification code is incorrect'}, u'error_code': u'60022', u'success': False}
 
 # no verifications pending:
-# {u'message': u'No pending verifications for +1 231-357-6187 found.', u'errors': {u'message': u'No pending verifications for +1 123-456-7890 found.'}, u'error_code': u'60023', u'success': False}
+# {u'message': u'No pending verifications for +1 321-345-1234 found.', u'errors': {u'message': u'No pending verifications for +1 123-456-7890 found.'}, u'error_code': u'60023', u'success': False}
 ```
 
 ## <a href name="phone-intel"></a>Phone Intelligence
