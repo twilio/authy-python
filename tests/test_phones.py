@@ -6,7 +6,7 @@ if sys.version_info < (2, 7):
 else:
     import unittest
 
-from mockito import when, mock
+from mockito import when
 
 from authy import AuthyException, AuthyFormatException
 from authy.api import AuthyApiClient
@@ -26,14 +26,18 @@ class PhonesTest(unittest.TestCase):
         self.assertIsInstance(self.api.phones, Phones)
 
     def test_verification_start_without_via(self):
-        phone = self.phones.verification_start(self.phone_number, self.country_code,'sms')
+        phone = self.phones.verification_start(
+            self.phone_number, self.country_code, 'sms')
         self.assertTrue(phone.ok(), msg="errors: {0}".format(phone.errors()))
-        self.assertEquals(phone['message'], 'Text message sent to +1 305-456-2345.')
+        self.assertEquals(phone['message'],
+                          'Text message sent to +1 305-456-2345.')
 
     def test_verification_start(self):
-        phone = self.phones.verification_start(self.phone_number, self.country_code)
+        phone = self.phones.verification_start(
+            self.phone_number, self.country_code)
         self.assertTrue(phone.ok(), msg="errors: {0}".format(phone.errors()))
-        self.assertEquals(phone['message'], 'Text message sent to +1 305-456-2345.')
+        self.assertEquals(phone['message'],
+                          'Text message sent to +1 305-456-2345.')
 
     def test_verification_start_with_code_length(self):
         phone = self.phones.verification_start(self.phone_number, self.country_code,
@@ -72,14 +76,16 @@ class PhonesTest(unittest.TestCase):
         when(self.phones).verification_check(self.phone_number, self.country_code, '1234').thenReturn(
             'Verification code is incorrect.')
 
-        response = self.phones.verification_check(self.phone_number, self.country_code, '1234')
+        response = self.phones.verification_check(
+            self.phone_number, self.country_code, '1234')
         self.assertEqual(response, 'Verification code is incorrect.')
 
     def test_verification_check(self):
         when(self.phones).verification_check(self.phone_number, self.country_code, '0000').thenReturn(
             'Verification code is correct.')
 
-        response = self.phones.verification_check(self.phone_number, self.country_code, '0000')
+        response = self.phones.verification_check(
+            self.phone_number, self.country_code, '0000')
         self.assertEqual(response, 'Verification code is correct.')
 
     def test_phone_info(self):
@@ -89,5 +95,6 @@ class PhonesTest(unittest.TestCase):
         self.assertEquals(phone['type'], 'landline')
         self.assertFalse(phone['ported'])
 
+
 if __name__ == "__main__":
-	    unittest.main()
+    unittest.main()

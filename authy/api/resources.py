@@ -1,7 +1,10 @@
 import requests
 import platform
 import six
-import hashlib, hmac, base64, re
+import hashlib
+import hmac
+import base64
+import re
 
 from authy import __version__, AuthyFormatException
 
@@ -29,10 +32,12 @@ try:
 except IOError:
     _PLAT_STR = "unknown_platform"
 
+
 class Resource(object):
     """
     Request CRUD defined in Resource.
     """
+
     def __init__(self, api_uri, api_key):
         """
         Class constructor
@@ -122,6 +127,7 @@ class Instance(object):
     """
     Response parsing from resource request api calls
     """
+
     def __init__(self, resource, response):
         """
         Class constructor.
@@ -135,7 +141,6 @@ class Instance(object):
             self.content = self.response.json()
         except ValueError:
             self.content = self.response.text
-
 
     def ok(self):
         """
@@ -168,17 +173,20 @@ class Sms(Instance):
     """
     sms response handler
     """
+
     def ignored(self):
         try:
             self.content['ignored']
             return True
         except KeyError:
             return False
+
 
 class Call(Instance):
     """
     call response handler
     """
+
     def ignored(self):
         try:
             self.content['ignored']
@@ -186,10 +194,12 @@ class Call(Instance):
         except KeyError:
             return False
 
+
 class User(Instance):
     """
     users class response handler.
     """
+
     def __init__(self, resource, response):
         """
         user constructor. assigns id if exist.
@@ -207,6 +217,7 @@ class Users(Resource):
     """
     create, check status or delete user through this users datatype
     """
+
     def create(self, email, phone, country_code=1, send_install_link_via_sms=False):
         """
         sends request to create new user.
@@ -343,7 +354,8 @@ class Phones(Resource):
                 raise ValueError
             options['code_length'] = cl
         except ValueError:
-            raise AuthyFormatException("Invalid code_length. Expected numeric value from 4-10.")
+            raise AuthyFormatException(
+                "Invalid code_length. Expected numeric value from 4-10.")
 
         resp = self.post("/protected/json/phones/verification/start", options)
         return Phone(self, resp)
@@ -371,10 +383,12 @@ class Phones(Resource):
         resp = self.get("/protected/json/phones/info", options)
         return Phone(self, resp)
 
+
 class OneTouchResponse(Instance):
     """
     OneTouch response handler.
     """
+
     def __init__(self, resource, response):
         """
         OneTouchResponse constructor. receives two prams
@@ -385,7 +399,6 @@ class OneTouchResponse(Instance):
         super(OneTouchResponse, self).__init__(resource, response)
         if (isinstance(self.content, dict) and 'approval_request' in self.content):
             self.uuid = self.content['approval_request']['uuid']
-
 
     def get_uuid(self):
         if not self.uuid:
@@ -403,6 +416,15 @@ class OneTouchResponse(Instance):
 
 class OneTouch(Resource):
 
+    def _validate_request(self, user_id, message):
+        if not user_id or not isinstance(user_id, int):
+            raise AuthyFormatException(
+                'Invalid authy id, user id is requred and must be an integer value.')
+
+        if not message:
+            raise AuthyFormatException(
+                'Invalid message - should not be empty. It is required')
+
     def send_request(self, user_id, message, seconds_to_expire=None, details={}, hidden_details={}, logos=[]):
         """
         OneTouch verification request. Sends a request for Auth App. For more info https://www.twilio.com/docs/api/authy/authy-onetouch-api
@@ -415,24 +437,20 @@ class OneTouch(Resource):
         :return OneTouchResponse: the server response Json Object
         """
 
-        if not user_id or not isinstance(user_id, int):
-            raise AuthyFormatException('Invalid authy id, user id is requred and must be an integer value.')
-
-        if not message:
-            raise AuthyFormatException('Invalid message - should not be empty. It is required')
+        self._validate_request(user_id, message)
 
         data = {
             "message": message[:MAX_STRING_SIZE],
             "seconds_to_expire": seconds_to_expire,
-            "details":self.__clean_inputs(details),
+            "details": self.__clean_inputs(details),
             'hidden_details': self.__clean_inputs(hidden_details),
             'logos': self.clean_logos(logos)
         }
 
-        request_url = "/onetouch/json/users/{0}/approval_requests".format(user_id)
+        request_url = "/onetouch/json/users/{0}/approval_requests".format(
+            user_id)
         response = self.post(request_url, data)
         return OneTouchResponse(self, response)
-
 
     def clean_logos(self, logos):
         """
@@ -441,9 +459,10 @@ class OneTouch(Resource):
         :return list logos:
         """
         if not len(logos):
-            return logos # Allow nil hash
+            return logos  # Allow nil hash
         if not isinstance(logos, list):
-            raise AuthyFormatException('Invalid logos list. Only res and url required')
+            raise AuthyFormatException(
+                'Invalid logos list. Only res and url required')
 
         temp_array = {}
         clean_logos = []
@@ -461,7 +480,8 @@ class OneTouch(Resource):
                 elif l == 'url':
                     temp_array['url'] = logo[l][:MAX_STRING_SIZE]
                 else:
-                    raise AuthyFormatException('Invalid logos list. Only res and url required')
+                    raise AuthyFormatException(
+                        'Invalid logos list. Only res and url required')
 
             clean_logos.append(temp_array)
             temp_array = {}
@@ -476,7 +496,7 @@ class OneTouch(Resource):
         """
         request_url = "/onetouch/json/approval_requests/{0}".format(uuid)
         response = self.get(request_url)
-        return OneTouchResponse(self,response)
+        return OneTouchResponse(self, response)
 
     def validate_one_touch_signature(self, signature, nonce, method, url, params):
         """
@@ -490,29 +510,35 @@ class OneTouch(Resource):
         :return bool: True if calculated signature and X-Authy-Signature are identical else False.
         """
         if not signature or not isinstance(signature, str):
-            raise AuthyFormatException("Invalid signature - should not be empty. It is required")
+            raise AuthyFormatException(
+                "Invalid signature - should not be empty. It is required")
 
         if not nonce:
-            raise AuthyFormatException("Invalid nonce - should not be empty. It is required")
+            raise AuthyFormatException(
+                "Invalid nonce - should not be empty. It is required")
 
-        if not method or not ('get' == method.lower() or 'post' == method.lower() ):
-            raise AuthyFormatException("Invalid method - should not be empty. It is required")
+        if not method or not ('get' == method.lower() or 'post' == method.lower()):
+            raise AuthyFormatException(
+                "Invalid method - should not be empty. It is required")
 
         if not params or not isinstance(params, dict):
-            raise AuthyFormatException("Invalid params - should not be empty. It is required")
-
+            raise AuthyFormatException(
+                "Invalid params - should not be empty. It is required")
 
         query_params = self.__make_http_query(params)
         # Sort and replace encoded  params in case-sensitive order
-        sorted_params = '&'.join(sorted(query_params.replace('/', '%2F').replace('%20', '+').split('&')))
-        sorted_params = re.sub("\\%5B([0-9])*\\%5D","%5B%5D",sorted_params)
+        sorted_params = '&'.join(sorted(query_params.replace(
+            '/', '%2F').replace('%20', '+').split('&')))
+        sorted_params = re.sub("\\%5B([0-9])*\\%5D", "%5B%5D", sorted_params)
         sorted_params = re.sub("\\=None", "=", sorted_params)
         data = nonce + "|" + method + "|" + url + "|" + sorted_params
         try:
-            calculated_signature = base64.b64encode(hmac.new(self.api_key.encode(), data.encode(), hashlib.sha256).digest())
+            calculated_signature = base64.b64encode(
+                hmac.new(self.api_key.encode(), data.encode(), hashlib.sha256).digest())
             return calculated_signature.decode() == signature
         except:
-            calculated_signature = base64.b64encode(hmac.new(self.api_key, data, hashlib.sha256).digest())
+            calculated_signature = base64.b64encode(
+                hmac.new(self.api_key, data, hashlib.sha256).digest())
             return calculated_signature == signature
 
     def __make_http_query(self, params, topkey=''):
@@ -537,13 +563,17 @@ class OneTouch(Resource):
                     i = 0
                     for val in params[key]:
                         if type(val) is dict:
-                            result +=   self.__make_http_query(val, newkey + quote('['+str(i)+']'))
+                            result += self.__make_http_query(
+                                val, newkey + quote('['+str(i)+']'))
                         else:
-                            result += newkey + quote('['+str(i)+']') + "=" + quote(str(val)) + "&"
+                            result += newkey + \
+                                quote('['+str(i)+']') + "=" + \
+                                quote(str(val)) + "&"
                         i = i + 1
                 # boolean should have special treatment as well
                 elif type(params[key]) is bool:
-                    result += newkey + "=" + quote(str(params[key]).lower()) + "&"
+                    result += newkey + "=" + \
+                        quote(str(params[key]).lower()) + "&"
                 # assume string (integers and floats work well)
                 else:
                     result += newkey + "=" + quote(str(params[key])) + "&"
@@ -551,7 +581,6 @@ class OneTouch(Resource):
         if (result) and (topkey == '') and (result[-1] == '&'):
             result = result[:-1]
         return result
-
 
     def __clean_inputs(self, params):
 
@@ -564,6 +593,6 @@ class OneTouch(Resource):
             if not isinstance(params[k], dict):
                 temp_hash[k[:MAX_STRING_SIZE]] = params[k][:MAX_STRING_SIZE]
             else:
-                temp_hash[k[:MAX_STRING_SIZE]] = self.__clean_inputs(params[k]);
+                temp_hash[k[:MAX_STRING_SIZE]] = self.__clean_inputs(params[k])
 
         return temp_hash
