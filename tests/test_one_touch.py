@@ -1,3 +1,6 @@
+from authy.api.resources import OneTouch
+from authy.api.resources import OneTouchResponse
+from authy import AuthyException
 import sys
 import test_helper
 
@@ -6,17 +9,17 @@ if sys.version_info < (2, 7):
 else:
     import unittest
 
-from unittest.mock import MagicMock
-
-from authy import AuthyException
-from authy.api.resources import OneTouchResponse
-from authy.api.resources import OneTouch
+if sys.version_info < (3, 0):
+    from mock import MagicMock
+else:
+    from unittest.mock import MagicMock
 
 
 class OneTouchTest(unittest.TestCase):
 
     def setUp(self):
-        self.resource = MagicMock(return_value=OneTouch)
+        self.resource = MagicMock()
+        self.resource.return_value = OneTouch
         self.response = MagicMock()
         otr = MagicMock(OneTouchResponse(self.resource, self.response))
         otr.errors = MagicMock(return_value={})
