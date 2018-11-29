@@ -8,6 +8,7 @@ docs/build
 venv/
 env/
 .DS_Store
+.vscode/
 
 # pyenv
 .python-version

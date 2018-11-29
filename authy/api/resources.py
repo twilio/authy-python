@@ -14,7 +14,6 @@ try:
 except ImportError:
     from urllib.parse import quote
 
-# import json
 try:
     import json
 except ImportError:
