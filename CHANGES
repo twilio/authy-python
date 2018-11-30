@@ -3,6 +3,29 @@ python-authy Changelog
 
 Here you can see the full list of changes between each python-authy release.
 
+Version 2.2.3
+--------------------
+[Full Changelog](https://github.com/authy/authy-python/compare/v2.2.2...v2.2.3)
+
+ - [#42](https://github.com/authy/authy-python/pull/42): Update history to remove live API key
+ - [#41](https://github.com/authy/authy-python/pull/41): Coerced token to string to allow for length comparison
+ - [#40](https://github.com/authy/authy-python/pull/40): Fix duplicate in CHANGES
+ - [#39](https://github.com/authy/authy-python/pull/39): Adds a release script for automating deployment to PyPI
+ - [#36](https://github.com/authy/authy-python/pull/36): Add code_length support for phones.verification_start
+ - [#24](https://github.com/authy/authy-python/pull/24): Add Python 3 to language classifiers in setup.py
+ - [#32](https://github.com/authy/authy-python/pull/32): Add numbers to arguments to support python 2.6 again
+ - [#33](https://github.com/authy/authy-python/pull/33): Update resources.py
+ - [#34](https://github.com/authy/authy-python/pull/34): Fix for #10 - don't call platform.platform if it excepts
+ - [#25](https://github.com/authy/authy-python/pull/25): fix signature
+ - [#23](https://github.com/authy/authy-python/pull/23): Fix typo in README
+ - [#26](https://github.com/authy/authy-python/pull/26): Fix one_touch validation method call
+ - [#15](https://github.com/authy/authy-python/pull/15): Minor documentation change
+ - [#20](https://github.com/authy/authy-python/pull/20): Onetouch support update
+ - [#2](https://github.com/authy/authy-python/pull/2): OneTouch Support for Python
+ - [#14](https://github.com/authy/authy-python/pull/14): Try fix issue #10
+ - [#12](https://github.com/authy/authy-python/pull/12): Flaked and fixed for Python3
+ - [#13](https://github.com/authy/authy-python/pull/13): Added make target to run independent test files.
+
 Version 2.2.2
 --------------------
 [Full Changelog](https://github.com/authy/authy-python/compare/v2.2.1...v2.2.2)
