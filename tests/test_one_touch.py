@@ -1,3 +1,4 @@
+from mock import MagicMock
 from authy.api.resources import OneTouch
 from authy.api.resources import OneTouchResponse
 from authy import AuthyException
@@ -9,17 +10,12 @@ if sys.version_info < (2, 7):
 else:
     import unittest
 
-if sys.version_info < (3, 0):
-    from mock import MagicMock
-else:
-    from unittest.mock import MagicMock
-
 
 class OneTouchTest(unittest.TestCase):
 
     def setUp(self):
-        self.resource = MagicMock()
-        self.resource.return_value = OneTouch
+        self.resource = MagicMock(
+            OneTouch(test_helper.API_URL, test_helper.API_KEY))
         self.response = MagicMock()
         otr = MagicMock(OneTouchResponse(self.resource, self.response))
         otr.errors = MagicMock(return_value={})
@@ -30,7 +26,7 @@ class OneTouchTest(unittest.TestCase):
 
         self.resource.send_request = MagicMock(return_value=otr)
         self.resource.get_approval_status = MagicMock(return_value=otr)
-
+        self.resource.clean_logos = OneTouch.clean_logos
         self.resource.__make_http_query = OneTouch._OneTouch__make_http_query
         self.resource.validate_one_touch_signature = OneTouch.validate_one_touch_signature
         self.resource.api_key = 'foobar123'
@@ -82,7 +78,7 @@ class OneTouchTest(unittest.TestCase):
         message = "Login requested for a CapTrade Bank account."
 
         with self.assertRaises(AuthyException) as context:
-            self.resource._validate_request(self, user_id, message)
+            self.resource._validate_request(self.resource, user_id, message)
 
         self.assertEqual(
             "Invalid authy id, user id is requred and must be an integer value.", str(context.exception))
@@ -94,7 +90,7 @@ class OneTouchTest(unittest.TestCase):
         message = ''
 
         with self.assertRaises(AuthyException) as context:
-            self.resource._validate_request(self, user_id, message)
+            self.resource._validate_request(self.resource, user_id, message)
 
         self.assertEqual(
             "Invalid message - should not be empty. It is required", str(context.exception))
@@ -132,25 +128,21 @@ class OneTouchTest(unittest.TestCase):
         self.resource._validate_request.assert_called_once
 
     def test_clean_logos_invalid_key(self):
-        self.resource.clean_logos = OneTouch.clean_logos
-
         logos = [dict(wrong='default', url='https://www.python.org/static/img/python-logo.png'),
                  dict(res='low', url='https://www.python.org/static/img/python-logo.png')]
 
         with self.assertRaises(AuthyException) as context:
-            self.resource.clean_logos(self, logos)
+            self.resource.clean_logos(self.resource, logos)
 
         self.assertEqual(
             "Invalid logos list. Only res and url required", str(context.exception))
 
     def test_clean_logos_invalid_data_type(self):
-        self.resource.clean_logos = OneTouch.clean_logos
-
         logos = dict(
             res='default', url='https://www.python.org/static/img/python-logo.png')
 
         with self.assertRaises(AuthyException) as context:
-            self.resource.clean_logos(self, logos)
+            self.resource.clean_logos(self.resource, logos)
 
         self.assertEqual(
             "Invalid logos list. Only res and url required", str(context.exception))
@@ -186,7 +178,6 @@ class OneTouchTest(unittest.TestCase):
         self.assertEqual(touch, True)
 
     def test_ONETOUCH_CALLBACK_CHECK_WD_GET_METHOD_INVAILED_NONCE(self):
-        self.resource.validate_one_touch_signature = OneTouch.validate_one_touch_signature
         touch = self.resource.validate_one_touch_signature(self.resource,
                                                            test_helper.GET_REQ_SIGNATURE,
                                                            'INVAILED NONCE',
