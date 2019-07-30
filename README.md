@@ -225,67 +225,9 @@ To simplify the process of handling a request, you can set a callback URL in the
 
 ## <a name="phone-verification"></a>Phone Verification
 
-Authy has an API to verify users via phone calls or sms. Also, user phone information can be gethered
-for support and verification purposes. You do not need the user ID to perform phone verification.
+[Phone verification now lives in the Twilio API](https://www.twilio.com/docs/verify/api) and has [Python support through the official Twilio helper libraries](https://www.twilio.com/docs/libraries/python). 
 
-### Phone Verification Start
-
-In order to start a phone verification, we ask the API to send a token to the user via sms or call:
-
-```python
-request = authy_api.phones.verification_start(phone_number, country_code, via='sms')
-
-print request.content
-
-# {u'uuid': u'1785f5b0-1234-1234-1234-1285ca17e122', u'success': True, u'seconds_to_expire': 587, u'is_cellphone': True, u'carrier': u'AT&T Wireless', u'message': u'Text message sent to +1 123-456-7890.'}
-```
-
-Optionally you can specify the language that you prefer the phone verification message to be sent. Supported
-languages include: English (`en`), Spanish (`es`), Portuguese (`pt`), German (`de`), French (`fr`) and
-Italian (`it`). If not specified, English will be used.
-
-```python
-# This will send a message in spanish
-authy_api.phones.verification_start(phone_number, country_code, via='sms', locale='es')
-```
-
-### Phone Verification Check
-
-Once you get the verification from user, you can check if it's valid with:
-
-```python
-check = authy_api.phones.verification_check(phone_number, country_code, verification_code)
-
-print check.ok()
-# True
-```
-
-If `.ok()` returns false, `.content()` will provide useful information:
-
-```
-print check.content
-
-# wrong code:
-# {u'message': u'Verification code is incorrect', u'errors': {u'message': u'Verification code is incorrect'}, u'error_code': u'60022', u'success': False}
-
-# no verifications pending:
-# {u'message': u'No pending verifications for +1 321-345-1234 found.', u'errors': {u'message': u'No pending verifications for +1 123-456-7890 found.'}, u'error_code': u'60023', u'success': False}
-```
-
-## <a href name="phone-intel"></a>Phone Intelligence
-
-If you want to gather additional information about user phone, use the phone intelligence API.
-
-```python
-phone_intel = authy_api.phones.info(phone_number, country_code)
-
-if phone_intel.ok():
-	print phone_intel.content
-	
-# {u'ported': False, u'message': u'Phone number information as of 2018-01-05 00:49:41 UTC', u'type': u'cellphone', u'success': True, u'provider': u'AT&T Wireless'}
-```
-
-## <a href name="app-info"></a>Application Info
+[Legacy (V1) documentation here.](verify-legacy-v1.md)
 
 ### Details
 
@@ -321,8 +263,8 @@ else:
 
 You can find the full API documentation in the official documentation.
 
-* [Authy (2FA)](https://www.twilio.com/docs/api/authy)
-* [Phone Verification](https://www.twilio.com/docs/api/verify)
+* [Authy (2FA)](https://www.twilio.com/docs/authy/api)
+* [Phone Verification](https://www.twilio.com/docs/verify/api)
 
 ## Contributing
 
