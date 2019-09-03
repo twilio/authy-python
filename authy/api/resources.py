@@ -259,6 +259,18 @@ class Users(Resource):
         resp = self.post("/protected/json/users/{0}/delete".format(user_id))
 
         return User(self, resp)
+    
+    def generate_qr(self, user_id, size=None, label=None):
+        data = {}
+
+        if size is not None:
+            data['qr_size'] = size
+        if label is not None:
+            data['label'] = label
+
+        resp = self.post("/protected/json/users/{}/secret".format(user_id), data)
+
+        return User(self, resp)
 
 
 class Token(Instance):
