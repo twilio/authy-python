@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/twilio/authy-python.svg?branch=master)](https://travis-ci.org/authy/authy-python)
+[![PyPI version](https://badge.fury.io/py/authy.svg)](https://pypi.org/project/authy/) [![Build Status](https://travis-ci.org/twilio/authy-python.svg?branch=master)](https://travis-ci.org/authy/authy-python)
 
 # Python Client for Twilio Authy Two-Factor Authentication (2FA) API
 
