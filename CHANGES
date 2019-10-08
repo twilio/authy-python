@@ -3,6 +3,12 @@ python-authy Changelog
 
 Here you can see the full list of changes between each python-authy release.
 
+Version 2.2.4
+--------------------
+[Full Changelog](https://github.com/authy/authy-python/compare/v2.2.3...v2.2.4)
+
+ - [#43](https://github.com/authy/authy-python/pull/43): Add support for generating generic QR code
+
 Version 2.2.3
 --------------------
 [Full Changelog](https://github.com/authy/authy-python/compare/v2.2.2...v2.2.3)
