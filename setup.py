@@ -3,7 +3,9 @@ from setuptools import setup, find_packages
 
 # to install authy type the following command:
 #     python setup.py install
-#
+
+with open('README.md') as f:
+    long_description = f.read()
 
 setup(
     name="authy",
@@ -29,6 +31,6 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Security"
     ],
-    long_description="""\
-    Authy API Client for Python
-""" )
+    long_description=long_description,
+    long_description_content_type='text/markdown'
+)
