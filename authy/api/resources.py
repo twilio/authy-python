@@ -272,6 +272,11 @@ class Users(Resource):
 
         return User(self, resp)
 
+    def registration_status(self, custom_user_id):
+        resp = self.get("/protected/json/registrations/status?custom_user_id={0}".format(custom_user_id))
+
+        return User(self, resp)
+
 
 class Token(Instance):
 
