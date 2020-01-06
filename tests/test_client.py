@@ -1,11 +1,7 @@
+import six
 import sys
 import test_helper
-import six
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
+import unittest
 
 from authy import AuthyException
 from authy.api import AuthyApiClient

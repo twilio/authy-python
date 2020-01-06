@@ -1,9 +1,9 @@
-API_KEY = "bf12974d70818a08199d17d5e2bae630"
-API_URL = "http://sandbox-api.authy.com"
+API_URL = "api-url"
+API_KEY = "fake-key"
 
-PHONE_NUMBER = '305-456-2345'
+PHONE_NUMBER = '555-123-4567'
 COUNTRY_CODE = '1'
-API_USER_ID = 51  # real user id for this pn on the sandbox-api
+API_USER_ID = 123
 
 AUTH_ID_A = 14125
 AUTH_ID_B = ''

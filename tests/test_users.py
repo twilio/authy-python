@@ -1,13 +1,15 @@
+import six
 import sys
 import test_helper
+import unittest
 
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
+if six.PY3:
+    from unittest.mock import MagicMock
 else:
-    import unittest
+    from mock import MagicMock
 
 from authy import AuthyException
-from authy.api.resources import User
+from authy.api.resources import User, Sms
 from authy.api.resources import Users
 from authy.api import AuthyApiClient
 
@@ -15,11 +17,25 @@ from authy.api import AuthyApiClient
 class UsersTest(unittest.TestCase):
 
     def setUp(self):
-        self.api = AuthyApiClient(test_helper.API_KEY, test_helper.API_URL)
-        self.users = Users(test_helper.API_URL, test_helper.API_KEY)
+        self.users = MagicMock(Users(test_helper.API_URL, test_helper.API_KEY))
+        self.response = MagicMock()
+        
+        user = MagicMock(User(self.users, self.response))
+        user.content = {"user": {"id": test_helper.API_USER_ID}, "success": True, "message": "something"}
+        user.errors = MagicMock(return_value={})
+        user.ok = MagicMock(return_value=True)
+        user.id = MagicMock(return_value=test_helper.API_USER_ID)
+
+        sms = MagicMock(Sms(self.users, self.response))
+        sms.errors = MagicMock(return_value={})
+
+        self.users.create = MagicMock(return_value = user)
+        self.users.delete = MagicMock(return_value = user)
+        self.users.status = MagicMock(return_value = user)
+        self.users.request_sms = MagicMock(return_value = sms)
 
     def test_users(self):
-        self.assertIsInstance(self.api.users, Users)
+        self.assertIsInstance(self.users, Users)
 
     def test_create_valid_user(self):
         user = self.users.create('test@example.com', '3457824988', 1)
@@ -28,14 +44,6 @@ class UsersTest(unittest.TestCase):
         self.assertTrue(user.ok())
         self.assertTrue('user' in user.content)
         self.assertIsNotNone(user.id)
-
-    def test_create_invalid_user(self):
-        user = self.users.create('testexample.com', '782392032', 1)
-
-        self.assertFalse(user.ok())
-        self.assertIsInstance(user, User)
-        self.assertEqual(user.errors()['email'], 'is invalid')
-        self.assertIsNone(user.id)
 
     def test_request_sms_token(self):
         user = self.users.create('test@example.com', '202-555-0158', 1)

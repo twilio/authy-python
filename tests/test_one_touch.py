@@ -1,15 +1,16 @@
-from mock import MagicMock
+import six
+import sys
+import test_helper
+import unittest
+
+if six.PY3:
+    from unittest.mock import MagicMock
+else:
+    from mock import MagicMock
+
 from authy.api.resources import OneTouch
 from authy.api.resources import OneTouchResponse
 from authy import AuthyException
-import sys
-import test_helper
-
-if sys.version_info < (2, 7):
-    import unittest2 as unittest
-else:
-    import unittest
-
 
 class OneTouchTest(unittest.TestCase):
 
