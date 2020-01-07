@@ -336,6 +336,20 @@ class Phone(Instance):
 
 class Phones(Resource):
 
+    def __validate_channel(self, via):
+        if via != 'sms' and via != 'call':
+            raise AuthyFormatException("Invalid Via. Expected 'sms' or 'call'.")
+    
+    def __validate_code_length(self, code_length):
+        try:
+            cl = int(code_length)
+            if cl < 4 or cl > 10:
+                raise ValueError
+            return cl
+        except ValueError:
+            raise AuthyFormatException(
+                "Invalid code_length. Expected numeric value from 4-10.")
+
     def verification_start(self, phone_number, country_code, via='sms',
                            locale=None, code_length=4):
         """
@@ -347,8 +361,7 @@ class Phones(Resource):
         :return:
         """
 
-        if via != 'sms' and via != 'call':
-            raise AuthyFormatException("Invalid Via. Expected 'sms' or 'call'.")
+        self.__validate_channel(via)
 
         options = {
             'phone_number': phone_number,
@@ -356,17 +369,11 @@ class Phones(Resource):
             'via': via
         }
 
+        cl = self.__validate_code_length(code_length)
+        options['code_length'] = cl
+
         if locale:
             options['locale'] = locale
-
-        try:
-            cl = int(code_length)
-            if cl < 4 or cl > 10:
-                raise ValueError
-            options['code_length'] = cl
-        except ValueError:
-            raise AuthyFormatException(
-                "Invalid code_length. Expected numeric value from 4-10.")
 
         resp = self.post("/protected/json/phones/verification/start", options)
         return Phone(self, resp)
