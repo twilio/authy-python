@@ -3,6 +3,14 @@ python-authy Changelog
 
 Here you can see the full list of changes between each python-authy release.
 
+Version 2.2.5
+--------------------
+[Full Changelog](https://github.com/authy/authy-python/compare/v2.2.4...v2.2.5)
+
+ - [#45](https://github.com/authy/authy-python/pull/45): add registration status endpoint
+ - [#47](https://github.com/authy/authy-python/pull/47): Remove reliance on sandbox API for testing, replace with mocks
+ - [#44](https://github.com/authy/authy-python/pull/44): Update long_description for PyPI description integration
+
 Version 2.2.4
 --------------------
 [Full Changelog](https://github.com/authy/authy-python/compare/v2.2.3...v2.2.4)
