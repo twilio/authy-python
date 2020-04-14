@@ -18,7 +18,7 @@ setup(
     install_requires=[
         "requests>=2.2.1",
         "six>=1.8.0",
-        "simplejson>=3.4.0;python_version<'2.6'"
+        "simplejson>=3.4.0;python_version<'2.6'",
     ]
     packages=find_packages(),
     classifiers=[
