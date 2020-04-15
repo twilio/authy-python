@@ -3,6 +3,12 @@ python-authy Changelog
 
 Here you can see the full list of changes between each python-authy release.
 
+Version 2.2.6
+--------------------
+[Full Changelog](https://github.com/authy/authy-python/compare/v2.2.5...v2.2.6)
+
+ - [#49](https://github.com/authy/authy-python/pull/49): Remove simplejson as a dependency for python 2.6+
+
 Version 2.2.5
 --------------------
 [Full Changelog](https://github.com/authy/authy-python/compare/v2.2.4...v2.2.5)
