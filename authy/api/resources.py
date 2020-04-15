@@ -15,12 +15,9 @@ except ImportError:
     from urllib.parse import quote
 
 try:
-    import json
+    import json  # python 2.6+
 except ImportError:
-    try:
-        import simplejson as json
-    except ImportError:
-        from django.utils import simplejson as json
+    import simplejson as json  # python 2.5
 
 MIN_TOKEN_SIZE = 6
 MAX_TOKEN_SIZE = 12
