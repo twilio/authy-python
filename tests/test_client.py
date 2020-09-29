@@ -22,7 +22,7 @@ class ApiClientTest(unittest.TestCase):
 
     def test_version(self):
         if six.PY3:
-            self.assertRegex(self.api.version(), '\d.\d*')
+            self.assertRegex(self.api.version(), r'\d.\d*')
         else:
             import re
             self.assertTrue(re.compile(r'\d.\d*').search(self.api.version()))
