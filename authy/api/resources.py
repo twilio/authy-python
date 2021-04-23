@@ -439,7 +439,7 @@ class OneTouch(Resource):
     def _validate_request(self, user_id, message):
         if not user_id or not isinstance(user_id, int):
             raise AuthyFormatException(
-                'Invalid authy id, user id is requred and must be an integer value.')
+                'Invalid authy id, user id is required and must be an integer value.')
 
         if not message:
             raise AuthyFormatException(
