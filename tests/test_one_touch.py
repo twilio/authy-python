@@ -82,7 +82,7 @@ class OneTouchTest(unittest.TestCase):
             self.resource._validate_request(self.resource, user_id, message)
 
         self.assertEqual(
-            "Invalid authy id, user id is requred and must be an integer value.", str(context.exception))
+            "Invalid authy id, user id is required and must be an integer value.", str(context.exception))
 
     def test_validate_request_blank_message(self):
         self.resource._validate_request = OneTouch._validate_request
